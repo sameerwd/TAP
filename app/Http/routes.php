@@ -21,7 +21,7 @@ Route::controllers([
 ]);
 
 /* Registration API */
-Route::resource('api/createUser','Auth\AuthController@create'); //'RegistrationController@create');
+Route::resource('api/createUser','Auth\RegisterController@create'); //'RegistrationController@create');
 Route::resource('api/verifyEmailUser', 'RegistrationController@verifyEmail');
 Route::resource('api/userForgotPassword', 'RegistrationController@userForgotPassword');
 
@@ -34,7 +34,7 @@ Route::resource('api/listByMonth', 'AssignmentController@listAssignmentByMonth')
 
 /* Course Related APIs*/
 
-Route::resource('api/create', 'CourseController@create');
+Route::resource('api/createCourse', 'CourseController@create');
 Route::resource('api/createStudentCourse', 'CourseController@createStudentCourse');
 Route::resource('api/update', 'CourseController@update');
 Route::resource('api/updateStudentCourse', 'CourseController@updateStudentCourse');
