@@ -18,7 +18,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
-class CourseController extends Controller
+class ChatController extends Controller
 {
 
     Course courseObj = new Course;

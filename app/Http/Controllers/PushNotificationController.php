@@ -19,7 +19,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
-class CourseController extends Controller
+class PushNotificationController extends Controller
 {
 
     PushNotification $pushNotificationObj = new PushNotification();
