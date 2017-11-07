@@ -56,7 +56,7 @@ class PushNotificationController extends Controller
 
     
         if($activatePush){
-            return array("status" => "fail", "data" => null,"message" => "Push notification permission updated successfully.");
+            return array("status" => "success", "data" => null,"message" => "Push notification permission updated successfully.");
         }
         else{
             return array("status" => "fail", "data" => null,"message" => "Unable to update permissions right now, please try after some time.");

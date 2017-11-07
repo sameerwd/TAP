@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Model\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -36,8 +37,16 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        //$this->middleware('guest');
     }
+
+
+    /*Index method*/
+    public function index()
+    {
+        echo "Welcome!Please Register!";
+    }
+
 
     /**
      * Get a validator for an incoming registration request.
@@ -68,38 +77,50 @@ class RegisterController extends Controller
     protected function create()
     {
 
-        // data = {"first_name":"sam", "last_name": "deshpande","email":"sam@desh","password":"****","user_type":"admin","os":"iOS","device":"moto","pushkey":"asdet"}    
+        /*$data = '{"first_name":"amey", "last_name": "jagtap","email":"amey@gmail.com","password":"amey123","user_type":"admin","os":"iOS","device":"moto","pushkey":"asdet"}';  */
 
-        $data       = $_POST["data"];
+        $data = $_POST["data"];
         $decodeData = json_decode($data);
-                $user_id = Auth::user()->id;
-                $login_key = \Session::getId();
+                //$user_id = Auth::user()->id;
+                //$login_key = \Session::getId();
 
-        if($data['user_type'] == 1)
+
+
+        if($decodeData->user_type == 'admin')
         {
-            return User::create([
-                'firstname' => $data['first_name'],
-                'lastname' => $data['last_name'],
-                'email' => $data['email'],
-                'password' => bcrypt($data['password']),
-                'userType' => $data['user_type'],
-                'os' => $data['os'],
-                'device' => $data['device'],
-                'pushkey' => $data['pushkey'],
+            $userCreate = User::create([
+                'firstname' => $decodeData->first_name,
+                'lastname' => $decodeData->last_name,
+                'email' => $decodeData->email,
+                'password' => bcrypt($decodeData->password),
+                'userType' => 1,
+                'os' => $decodeData->os,
+                'device' => $decodeData->device,
+                'pushkey' => $decodeData->pushkey,
             ]);
         }
         else
         {
-            return User::create([
-                'title' => $data['title'],
-                'firstname' => $data['first_name'],
-                'lastname' => $data['last_name'],
-                'email' => $data['email'],
-                'password' => bcrypt($data['password']),
-                'userType' => $data['user_type'],
-                'os' => $data['os'],
-                'device' => $data['device'],
-                'pushkey' => $data['pushkey'],
+            $userCreate = User::create([
+                'title' => $decodeData->title,
+                'firstname' => $decodeData->first_name,
+                'lastname' => $decodeData->last_name,
+                'email' => $decodeData->email,
+                'password' => bcrypt($decodeData->password),
+                'userType' => 1,
+                'os' => $decodeData->os,
+                'device' => $decodeData->device,
+                'pushkey' => $decodeData->pushkey,
             ]);
         }
-}
+
+        if(isset($userCreate->id)){
+            return array("status" => "success", "data" => null,"message" => "User created successfully.");
+        }
+        else{
+            return array("status" => "fail", "data" => null,"message" => "Unable to create user.");
+        }
+    }
+
+    
+}    

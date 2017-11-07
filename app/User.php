@@ -1,29 +1,34 @@
-<?php
+<?php 
 
-namespace App;
+namespace App\Model;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Authenticatable;
+use App\Model\Audit;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-class User extends Authenticatable
-{
-    use Notifiable;
 
+use DB;
+use Illuminate\Support\Facades\Session;
+
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
+    use Authenticatable;
+
+    //
+    protected $table = 'user';
+        
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+    protected $fillable = ['firstname', 'lastname','email', 'password','userType','os','device','pushkey'];
 
+        
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
-}
+    protected $hidden = ['password'];

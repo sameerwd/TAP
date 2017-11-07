@@ -22,8 +22,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 class AssignmentController extends Controller
 {
 
-    Assignment $assignmentObj = new Assignment();
-    PushNotification $pushNotification = new PushNotification();
+    
     /*
     |--------------------------------------------------------------------------
     | Assignment Controller
@@ -46,7 +45,9 @@ class AssignmentController extends Controller
     {
 
         // data = {"userid":"2","search_type":"basic_search", "duedate":"", "courseid":"2"}    
-        
+        $assignmentObj = new Assignment();
+        $pushNotification = new PushNotification();
+
         $data = $_POST["data"];
         $decodeData = json_decode($data);
         $user_id = Auth::user()->id;
