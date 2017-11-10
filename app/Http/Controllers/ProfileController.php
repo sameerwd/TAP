@@ -13,7 +13,7 @@
 
 namespace App\Http\Controllers;
 
-use Model\Profile;
+use App\Model\Profile;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;

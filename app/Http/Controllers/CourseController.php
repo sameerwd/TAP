@@ -13,7 +13,7 @@
 
 namespace App\Http\Controllers;
 
-use Model\Course;
+use App\Model\Course;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -21,7 +21,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 class CourseController extends Controller
 {
 
-    Course $courseObj = new Course();
+    
     /*
     |--------------------------------------------------------------------------
     | Course Controller
@@ -42,6 +42,7 @@ class CourseController extends Controller
     /* This function lists the current student courses*/
     public function listStudentCourses()
     {
+            $courseObj = new Course();
             $courseObj->getCourseController();
     }
 
@@ -49,6 +50,8 @@ class CourseController extends Controller
     /* This function updates the student course details*/  //TODO Check for the functionality with Upendra.
     public function updateStudentCourse()
     {
+          $courseObj = new Course();
+
           $course = $_GET['ucid'];
     
     $sqlCheckValidCourseID = "SELECT ucid FROM user_course where ucid =".$course." and expirydate >= CURDATE()";

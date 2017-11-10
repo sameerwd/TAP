@@ -31,12 +31,12 @@ class ForgotPasswordController extends Controller
         $this->middleware('guest');
     }
 
-    public function index()
+    public function forgotPassword()
     {
 
-        $data = '{"email":"amey@gmail.com"}'; 
+        //$data = '{"email":"amey@gmail.com"}'; 
 
-        //$data = $_POST["data"];
+        $data = $_POST["data"];
         $decodeData = json_decode($data);
         $userObj = new User();
 

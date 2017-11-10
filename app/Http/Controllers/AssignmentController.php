@@ -13,9 +13,9 @@
 
 namespace App\Http\Controllers;
 
-use Model\Assignment;
-use Model\PushNotification;
-use App\Http\Controllers\Controller;
+use App\Model\Assignment;
+use App\Model\PushNotification;
+use App\Http\Controllers\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -50,12 +50,12 @@ class AssignmentController extends Controller
 
         $data = $_POST["data"];
         $decodeData = json_decode($data);
-        $user_id = Auth::user()->id;
-        $login_key = \Session::getId(); 
+        //$user_id = Auth::user()->id;
+        //$login_key = \Session::getId(); 
 
-        $duedate = $data['duedate'];
-        $userid = $data['userid'];
-        $courseid = $data['courseid'];        
+        $duedate = $decodeData->duedate;
+        $userid = $decodeData->userid;
+        $courseid = $decodeData->courseid;        
 
         $createAssignment = $assignmentObj->createAssignment($data);
 
@@ -66,9 +66,97 @@ class AssignmentController extends Controller
                 else{
                         $notify = $pushNotification->sendPostNotfication($userid,$courseid);
 
-                return array("status" => "success", "data" => $createAssignment, "message" => "Assignment created successfully");
+                    return array("status" => "success", "data" => $createAssignment, "message" => "Assignment created successfully");
                 }
     
     }
 
+
+    /*
+        List the assignments    
+    */
+    public function listAssignment()
+    {
+        $assignmentObj = new Assignment();
+
+        //$data = '{"usertype":"2", "userid": "2","courseid":"3"}';
+        $data = $_POST["data"];
+        $decodeData = json_decode($data);
+        //$user_id = Auth::user()->id;
+        
+
+        $userType = $decodeData->usertype;
+        $userid = $decodeData->userid;
+        $courseid = $decodeData->courseid;
+    
+    
+    
+        $getAssignment = $assignmentObj->getAssignmentList($userType,$courseid,$userid);
+        
+        // Check if there are results
+        if ($getAssignment != null && count($getAssignment) > 0)
+        {
+            // Finally, encode the array to JSON and output the results
+            return array("status" => "success", "data" => $getAssignment, "message" => "Assignment List");
+        }
+        else
+        {
+            return array("status" => "fail", "data" => null, "message" => "No assignments found");
+        }         
+    }
+
+    public function listAssignmentByMonth()
+    {
+
+        $assignmentObj = new Assignment();
+
+        //$data = '{"month":"student", "userid": "2","year":"3"}';
+        $data = $_POST["data"];
+        $decodeData = json_decode($data);
+        //$user_id = Auth::user()->id;
+        
+
+        $month = $decodeData->month;
+        $userid = $decodeData->userid;
+        $year = $decodeData->year;
+    
+        $getAssignment = $assignmentObj->getAssignmentByMonth($month,$year,$userid);
+        
+        // Check if there are results
+        if ($getAssignment != null && count($getAssignment) > 0)
+        {
+            // Finally, encode the array to JSON and output the results
+            return array("status" => "success", "data" => $getAssignment, "message" => "Assignment List");
+        }
+        else
+        {
+            return array("status" => "fail", "data" => null, "message" => "No assignments found");
+        }
+    
+    }
+
+    public function deleteAssignment()
+    {
+
+        $assignmentObj = new Assignment();
+
+        //$data = '{"month":"student", "userid": "2","year":"3"}';
+        $data = $_POST["data"];
+        $decodeData = json_decode($data);
+        //$user_id = Auth::user()->id;
+        $assignmentId = $decodeData->assignmentId;
+
+        if(isset($assignmentId) && $assignmentId != "")
+        {
+            $checkAssignmentExists = $assignmentObj->checkAssignment($assignmentId);
+
+            if($checkAssignmentExists == 0)
+                return array("status" => "success", "data" => null, "message" => "No assignments found");
+        }
+
+        $deleteAssignment = $assignmentObj->deleteAssignment($assignmentId);    
+        
+        if($deleteAssignment)
+            return array("status" => "success", "data" => null, "message" => "Assignment deleted");   
+    }
 }

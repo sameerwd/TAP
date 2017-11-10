@@ -13,15 +13,15 @@
 
 namespace App\Http\Controllers;
 
-use Model\User;
+use App\Model\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
 
-    User $userObj = new User;
     /*
     |--------------------------------------------------------------------------
     | Course Controller
@@ -39,14 +39,14 @@ class UserController extends Controller
     }
 
     /* This function is to validate user in the system*/
-    public funtion validateUser()
+    public function validateUser()
     {
         // data = {"email":"2","search_type":"basic_search"}    
-        
+        $userObj = new User();
         $data       = $_POST["data"];
         $decodeData = json_decode($data);
         $user_id = Auth::user()->id;
-        $login_key = \Session::getId(); 
+         
 
         $getUser = $userObj->validateUser($data['email']);
 
@@ -57,6 +57,25 @@ class UserController extends Controller
             else{
                 return array("status" => "fail", "data" => null, "message" => "No User Found");
             }
+    }
+
+    public function show()
+    {
+        $userObj = new User();
+        $data = $_POST["data"];
+        $decodeData = json_decode($data);
+        $user_id = Auth::user()->id;
+
+        $listUsers = $userObj->getUsers();
+
+        if(count($listUsers) > 0){
+                
+                return array("status" => "success", "data" => $listUsers, "message" => "User List");
+            }
+            else{
+                return array("status" => "fail", "data" => null, "message" => "No User Found");
+            }
+
     }    
 
 }

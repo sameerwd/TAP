@@ -43,7 +43,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     }
 
-
     public function findUserByEmail($email)
     {
         return DB::table('users')->where('email',$email)->count();
@@ -53,6 +52,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         $updateArray = array('password' => $password);
         return DB::table('users')->where('email',$email)->update($updateArray);
+    }
+
+    /* get registered user list*/
+    private function getUsers()
+    {
+        return DB::table('users')->select('title','firstname','lastname','email')->get();
     }
 
 

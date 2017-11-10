@@ -77,13 +77,22 @@ class RegisterController extends Controller
     protected function create()
     {
 
-        /*$data = '{"first_name":"amey", "last_name": "jagtap","email":"amey@gmail.com","password":"amey123","user_type":"admin","os":"iOS","device":"moto","pushkey":"asdet"}';  */
+        //$data = '{"first_name":"amey", "last_name": "jagtap","email":"amey@gmail.com","password":"amey123","user_type":"admin","os":"iOS","device":"moto","pushkey":"asdet"}'; 
 
         $data = $_POST["data"];
         $decodeData = json_decode($data);
+        $userObj = new User();
                 //$user_id = Auth::user()->id;
                 //$login_key = \Session::getId();
 
+        if(isset($decodeData->email) && $decodeData->email != "")
+        {
+            $email = $decodeData->email;
+            $checkUserExixts = $userObj->findUserByEmail($email);
+
+            if($checkUserExixts > 0)
+                return array("status" => "success", "data" => null,"message" => "User already exists with this email."); 
+        }
 
 
         if($decodeData->user_type == 'admin')

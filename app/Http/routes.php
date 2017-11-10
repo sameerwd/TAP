@@ -21,37 +21,34 @@ Route::get('home', 'WelcomeController@index');
 ]);
 
 /* Registration API */
-Route::resource('register','Auth\RegisterController'); //'RegistrationController@create');
-Route::resource('verifyEmailUser', 'Auth\RegisterController@verifyEmail');
-Route::resource('forgotPassword', 'Auth\ForgotPasswordController');
+Route::get('register','Auth\RegisterController@create'); //'RegistrationController@create');
+Route::get('verifyEmailUser', 'Auth\LoginController@verifyEmailUser');
+Route::get('forgotPassword', 'Auth\ForgotPasswordController@forgotPassword');
 
 /* Assignment*/
-Route::resource('create', 'AssignmentController@create');
-Route::resource('lists', 'AssignmentController@listAssignment');
-Route::resource('api/delete', 'AssignmentController@deleteAssignment');
-Route::resource('api/listByMonth', 'AssignmentController@listAssignmentByMonth');
+Route::get('listAssignments', 'AssignmentController@listAssignment');
+Route::get('delete', 'AssignmentController@delete');
+Route::get('listByMonth', 'AssignmentController@listAssignmentByMonth');
 
 
 /* Course Related APIs*/
-
-Route::resource('createCourse', 'CourseController@create');
-Route::resource('createStudentCourse', 'CourseController@createStudentCourse');
-Route::resource('update', 'CourseController@update');
-Route::resource('updateStudentCourse', 'CourseController@updateStudentCourse');
-Route::resource('deleteStudentCourse', 'CourseController@deleteStudentCourse');
-Route::resource('lists', 'CourseController@listStudentCourse');
+Route::get('createCourse', 'CourseController@create');
+Route::get('createStudentCourse', 'CourseController@createStudentCourse');
+Route::get('update', 'CourseController@update');
+Route::get('updateStudentCourse', 'CourseController@updateStudentCourse');
+Route::get('deleteStudentCourse', 'CourseController@deleteStudentCourse');
+Route::get('listStudentCourse', 'CourseController@listStudentCourse');
 
 
 /* User related APIs*/
-Route::resource('validateUser', 'UserController@validateUser');
-Route::resource('listUsers', 'UserController@getUsers');
+Route::get('users', 'UserController@validateUser');
 
 /* Push Notification APIs*/
-Route::resource('setPushPermission', 'PushNotificationController@activatePush');
+Route::get('setPushPermission', 'PushNotificationController@activatePush');
 
 /*Thread related APIs*/
-Route::resource('getThreadMessage', 'ThreadController@getThreadMessage');
-Route::resource('listUserThreads', 'ThreadController@getUserThreads');
+Route::get('getThreadMessage', 'ThreadController@getThreadMessage');
+Route::get('listUserThreads', 'ThreadController@getUserThreads');
 
 
 
