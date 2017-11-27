@@ -21,35 +21,46 @@ Route::get('home', 'WelcomeController@index');
 ]);
 
 /* Registration API */
-Route::get('register','Auth\RegisterController@create'); //'RegistrationController@create');
-Route::get('verifyEmailUser', 'Auth\LoginController@verifyEmailUser');
-Route::get('forgotPassword', 'Auth\ForgotPasswordController@forgotPassword');
+Route::post('register','Auth\RegisterController@create'); //'RegistrationController@create');
+Route::post('verifyEmailUser', 'UserController@validateUser');
+Route::post('forgotPassword', 'Auth\ForgotPasswordController@forgotPassword');
+Route::post('login', 'Auth\LoginController@login');
+Route::post('checkEmail','Auth\RegisterController@checkEmail');
 
 /* Assignment*/
-Route::get('listAssignments', 'AssignmentController@listAssignment');
-Route::get('delete', 'AssignmentController@delete');
-Route::get('listByMonth', 'AssignmentController@listAssignmentByMonth');
-
+Route::post('listAssignments', 'AssignmentController@listAssignment');
+Route::post('deleteAssignment', 'AssignmentController@deleteAssignment');
+Route::post('listAssignmentByMonth', 'AssignmentController@listAssignmentByMonth');
+Route::post('updateAssignment', 'AssignmentController@updateAssignment');
+Route::post('getFriends', 'AssignmentController@getFriends');
+Route::post('getStudents', 'StudentController@getStudents');
+Route::post('createAssignment', 'AssignmentController@create');
 
 /* Course Related APIs*/
-Route::get('createCourse', 'CourseController@create');
-Route::get('createStudentCourse', 'CourseController@createStudentCourse');
-Route::get('update', 'CourseController@update');
-Route::get('updateStudentCourse', 'CourseController@updateStudentCourse');
-Route::get('deleteStudentCourse', 'CourseController@deleteStudentCourse');
-Route::get('listStudentCourse', 'CourseController@listStudentCourse');
-
-
-/* User related APIs*/
-Route::get('users', 'UserController@validateUser');
+Route::post('createCourse', 'CourseController@create');
+Route::post('createStudentCourse', 'CourseController@createStudentCourse');
+Route::post('updateCourse', 'CourseController@updateCourse');
+Route::post('updateStudentCourse', 'CourseController@updateStudentCourse');
+Route::post('deleteStudentCourse', 'CourseController@deleteStudentCourse');
+Route::post('listStudentCourse', 'CourseController@listStudentCourses');
+Route::post('listInstructorCourse', 'CourseController@listInstructorCourses');
+Route::post('updateInstructorCourse', 'CourseController@updateInstructorCourse');
 
 /* Push Notification APIs*/
-Route::get('setPushPermission', 'PushNotificationController@activatePush');
+//Route::post('setPushPermission', 'PushNotificationController@activatePush');
 
-/*Thread related APIs*/
-Route::get('getThreadMessage', 'ThreadController@getThreadMessage');
-Route::get('listUserThreads', 'ThreadController@getUserThreads');
+/*Message related APIs*/
+Route::post('getThreads', 'ChatController@getThreads')->middleware('auth');
+Route::post('getThreadMessage', 'ChatController@getThreadMessage')->middleware('auth');
+Route::post('getUserThread', 'ChatController@getUserThreads')->middleware('auth');
+Route::post('listUserThreads', 'ChatController@getUserThreads')->middleware('auth');
+Route::post('saveMessage', 'ChatController@saveMessage')->middleware('auth');
+Route::post('updateNotificationPermission', 'PushNotificationController@activatePush')->middleware('auth');
 
+
+/*System Related APIs*/
+Route::post('getTAPPosts', 'SettingsController@getTAPPosts');
+Route::post('getTAPInstructorPosts', 'SettingsController@getTAPInstructorPosts');
 
 
 Route::get('names', function()

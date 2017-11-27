@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use App\Model\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -35,5 +39,57 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+
+    public function login(Request $request)
+    {
+                $data = $_POST["data"];
+                $decodeData = json_decode($data);
+                $userObj = new User();
+                
+               $user = array(
+                'email' => $decodeData->username,
+                'password' => $decodeData->password,
+                );
+                
+         //print_r($user);exit;      
+                
+        if (Auth::attempt($user)) {
+
+               Session::put('user_key', md5(uniqid()));
+            
+            $user_key=Session::get('user_key');
+            $userId = Auth::user()->id;
+            //return $user->name;
+            
+            $returnArray = $userObj->checkUser($decodeData->username); 
+                
+            if(count($returnArray) > 0)
+                return response($returnArray,200);
+            else
+                return response("User Not Active",200);
+        }
+        return response("Incorrect Username or Password",200);
+        // authentication failure! lets go back to the login page     */          
+    }
+    
+
+    // logout function
+    public function logout(Request $request) {
+        
+        $data           = $_POST["data"];
+        $decodeData     = json_decode($data);
+        $userObj    = new User(); 
+        $user_id = $decodeData->user_id;
+        $user_key = Session::get('user_key');   
+
+            $status = $userObj->logout($user_id,$user_key); 
+            Session::flush();
+        if($status){
+                        return array("status" => "success", "data" => $auditObj, "message" => "Logout Sucessfully!");
+                        }else{
+            return array("status" => "fail", "data" => null, "message" => "Error logging out!");
+        }
     }
 }

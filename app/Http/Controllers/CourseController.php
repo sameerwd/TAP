@@ -42,8 +42,42 @@ class CourseController extends Controller
     /* This function lists the current student courses*/
     public function listStudentCourses()
     {
+            $data       = $_POST["data"];
+            $decodeData = json_decode($data);
+            //$user_id = Auth::user()->id;
+            //$login_key = \Session::getId();
             $courseObj = new Course();
-            $courseObj->getCourseController();
+            $user_id = $decodeData->user_id;
+            $ucid = $decodeData->ucid;
+
+            try{
+                    $getStudentCourses = $courseObj->getStudentCourse($user_id,$ucid);
+                    return response($getStudentCourses,200);
+            }
+            catch(\Exception $e)
+            {
+                return response($e,400);
+            }
+    }
+
+
+    /*This function lists instructor courses*/
+    public function listInstructorCourses()
+    {
+            $data       = $_POST["data"];
+            $decodeData = json_decode($data);
+            $user_id = Auth::user()->id;
+            //$login_key = \Session::getId();
+            $courseObj = new Course();
+
+            try{
+                    $getInstructorCourses = $courseObj->getInstructorCourse($user_id);
+                    return response($getInstructorCourses,200);
+            }
+            catch(\Exception $e)
+            {
+                return response($e,400);
+            }
     }
 
 
@@ -51,10 +85,9 @@ class CourseController extends Controller
     public function updateStudentCourse()
     {
           $courseObj = new Course();
-
           $course = $_GET['ucid'];
     
-    $sqlCheckValidCourseID = "SELECT ucid FROM user_course where ucid =".$course." and expirydate >= CURDATE()";
+        $sqlCheckValidCourseID = "SELECT ucid FROM user_course where ucid =".$course." and expirydate >= CURDATE()";
         if ($result = mysqli_query($con, $sqlCheckValidCourseID))
         {
             if($result->num_rows>0){//valid ucid
@@ -93,18 +126,27 @@ class CourseController extends Controller
                 
         $data       = $_POST["data"];
         $decodeData = json_decode($data);
-        $user_id = Auth::user()->id;
-        $login_key = \Session::getId();
+        //$user_id = Auth::user()->id;
+        //$login_key = \Session::getId();
+        $courseObj = new Course();
 
         $courses = explode(",", $data['courses']);
         $codes = array();
-            foreach($courses as $course) {
-                $result = $courseObj->checkValidCourseId($course);
-                //      echo $sqlCheckValidCourseID;
-                if (count($result) > 0)
-                {                
-                    $createStudentCourse = $courseObj->createStudentCourse($course,$data['user_id']);
+
+            try{
+                foreach($courses as $course) {
+                    $result = $courseObj->checkValidCourseId($course);
+                    //      echo $sqlCheckValidCourseID;
+                    if (count($result) > 0)
+                    {                
+                        $createStudentCourse[] = $courseObj->createStudentCourse($course,$data['user_id']);
+                    }
                 }
+
+                return response(1,200);
+            }catch(\Exception $e)
+            {
+                return response($e,400);
             }
     }
 
@@ -112,37 +154,45 @@ class CourseController extends Controller
     /* This function creates a new course*/
     public function create()
     {
-        // data = {"user_id":"2","search_type":"basic_search", "courses":1,2,3,4} course_ids  
+        // data = {"user_id":"2","search_type":"basic_search", "courses":1,2,3,4, "expirydate":""} course_ids  
         
         $data       = $_POST["data"];
         $decodeData = json_decode($data);
-        $user_id = Auth::user()->id;
-        $login_key = \Session::getId();
-
-        $courses = explode(",", $data['courses']);
-
+        //$user_id = Auth::user()->id;
+        //$login_key = \Session::getId();
+        $courseObj = new Course();
+        $courses = explode(",", $decodeData->courses);
         $codes = array();
+
+        try{
         foreach($courses as $course) {
             if(strlen($course)>0){
                 
-                $createCourse = $courseObj->createCourse($course);
+                $createCourse[] = $courseObj->createCourse($course,$decodeData);
             }
         }
+            return response(1,200);
+        }catch(\Exception $e)
+        {
+            return response($e,400);
+        }
+
+
     }
 
     /* This function is used to update a course */
-    public function update()
+    public function updateCourse()
     {
         // data = {"user_id":"2", "ucid":"2", "scid":"3","search_type":"basic_search", "courses":1,2,3,4} course_ids  
 
         $data       = $_POST["data"];
         $decodeData = json_decode($data);
-        $user_id = Auth::user()->id;
-        $login_key = \Session::getId();
-
-    $userid = $data['userid'];;
-    $ucid = $data['ucid'];
-    $scid = $data['scid'];
+        //$user_id = Auth::user()->id;
+        //$login_key = \Session::getId();
+        $courseObj = new Course();
+        $userid = $decodeData->user_id;
+        $ucid = $decodeData->ucid;
+        $scid = $decodeData->scid;
     
     $result = $courseObj->checkValidCourseId($ucid);
     
@@ -153,21 +203,64 @@ class CourseController extends Controller
             if (count($result) > 0){
 
                     $updateCourse = $courseObj->updateStudentCourse($ucid,$scid);
-                    echo json_encode([
-                        "status" => "success",
-                    ]);
+                    
+                    return response($updateCourse,200);
                 }
                 else{
-                    echo json_encode([
-                        "status" => "CourseID already registered for user",
-                    ]);
+                    return response('Already Exists',205);
                 }
             
     }
     else{
-            echo json_encode([
-                "status" => "Invalid CourseID, please verify with your Instructor",
-            ]);
+            return response('Invalid',400);
         }
+
+    }
+
+    public function updateInstructorCourse()
+    {
+        $data       = $_POST["data"];
+        $decodeData = json_decode($data);
+        //$user_id = Auth::user()->id;
+        //$login_key = \Session::getId();
+        $courseObj = new Course();
+        
+        $userid = $decodeData->user_id;
+        $ucid = $decodeData->ucid;
+        $course = $decodeData->course;
+        $expiry = $decodeData->expiry;
+    
+        try{
+            $updateInstructorCourse = $courseObj->updateInstructorCourse($course,$expiry,$userid,$ucid);
+            return response($updateInstructorCourse,200);
+        }
+        catch(\Exception $e)
+        {
+            return response("Bad Request. Please try again",400);
+        }
+        
+    }
+
+    public function resetCourse()
+    {
+        $data       = $_POST["data"];
+        $decodeData = json_decode($data);
+        //$user_id = Auth::user()->id;
+        //$login_key = \Session::getId();
+        $courseObj = new Course();
+
+        $ucid = $decodeData->ucid;
+        $expiry = $decodeData->expiry;
+
+        $deleteCourse = $courseObj->deleteStudentCourse($ucid);
+        
+         if($deleteCourse){  
+                $updateCourse = $courseObj->resetStudentCourse($ucid); 
+                return array("status" => "success", "data" => null, "message" => "Course Reset Successfully");
+            }
+            else{
+                return array("status" => "fail", "data" => null, "message" => "Cannot Reset Course");
+            }
+    }
 
 }

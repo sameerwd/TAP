@@ -37,7 +37,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('guest');
+        $this->middleware('guest');
     }
 
 
@@ -74,7 +74,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    protected function create()
+    public function create()
     {
 
         //$data = '{"first_name":"amey", "last_name": "jagtap","email":"amey@gmail.com","password":"amey123","user_type":"admin","os":"iOS","device":"moto","pushkey":"asdet"}'; 
@@ -91,7 +91,7 @@ class RegisterController extends Controller
             $checkUserExixts = $userObj->findUserByEmail($email);
 
             if($checkUserExixts > 0)
-                return array("status" => "success", "data" => null,"message" => "User already exists with this email."); 
+                return response("User already exists",200);
         }
 
 
@@ -124,12 +124,34 @@ class RegisterController extends Controller
         }
 
         if(isset($userCreate->id)){
-            return array("status" => "success", "data" => null,"message" => "User created successfully.");
+            return response($userCreate->id,200);
         }
         else{
-            return array("status" => "fail", "data" => null,"message" => "Unable to create user.");
+            return response("Bad Request,please try again.",400);
         }
     }
 
+    /**
+     * Checks the email in the system.
+     *
+     * @param  $email
+     * @return Boolean status
+     */
+    public function checkEmail()
+    {
+        $data = $_POST["data"];
+        $decodeData = json_decode($data);
+        $userObj = new User();
+
+        $email = $decodeData->email;
+
+        try{
+            $checkEmail = $userObj->checkUser($email);
+            return response($checkEmail,200);
+        }catch(\Exception $e)
+        {
+            return response($e,400);
+        }    
+    }
     
 }    

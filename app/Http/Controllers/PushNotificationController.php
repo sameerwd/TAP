@@ -13,8 +13,8 @@
 
 namespace App\Http\Controllers;
 
-use Model\PushNotification;
-use Model\Course;
+use App\Model\PushNotification;
+use App\Model\Course;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -22,7 +22,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 class PushNotificationController extends Controller
 {
 
-    PushNotification $pushNotificationObj = new PushNotification();
+    
     /*
     |--------------------------------------------------------------------------
     | Course Controller
@@ -46,21 +46,70 @@ class PushNotificationController extends Controller
         
         $data       = $_POST["data"];
         $decodeData = json_decode($data);
-        $user_id = Auth::user()->id;
-        $login_key = \Session::getId(); 
+        //$user_id = Auth::user()->id;
+        //$login_key = \Session::getId(); 
+        $pushNotificationObj = new PushNotification();
 
-        $userid = $data['userid'];
-        $permission = $data['permission'];
+        $userid = $decodeData->user_id;
+        $permission = $decodeData->permission;
 
-        $activatePush = $pushNotificationObj->setPushPermission($userid,$permission);
-
-    
-        if($activatePush){
-            return array("status" => "success", "data" => null,"message" => "Push notification permission updated successfully.");
+        try{
+            $activatePush = $pushNotificationObj->setPushPermission($userid,$permission);    
+            return response($activatePush,200);
         }
-        else{
-            return array("status" => "fail", "data" => null,"message" => "Unable to update permissions right now, please try after some time.");
+        catch(\Exception $e)
+        {
+            return response("Bad Request. Please try again",400);
         }
+    }
+
+    public function saveDeviceKey()
+    {
+        $data = $_POST["data"];
+        $decodeData = json_decode($data);
+        $pushNotificationObj = new PushNotification();
+
+
+        $deviceid = $decodeData->deviceid;
+        $type = $decodeData->type;
+        $siteid = $decodeData->siteid;
+        $userid = $decodeData->userid;
+
+        try{
+            $saveDeviceKey = $pushNotificationObj->saveDeviceKey($deviceid,$type,$siteid,$userid);    
+            return response($saveDeviceKey,200);
+        }
+        catch(\Exception $e)
+        {
+            return response("Bad Request. Please try again",400);
+        }
+        
+
+    }
+
+
+    public function savePushKey()
+    {
+        $data = $_POST["data"];
+        $decodeData = json_decode($data);
+        $pushNotificationObj = new PushNotification();
+
+
+        $device = $decodeData->device;
+        $os = $decodeData->os;
+        $pushkey = $decodeData->pushkey;
+        $userid = $decodeData->userid;
+
+        
+        try{
+            $savePushKey = $pushNotificationObj->savePushKey($pushkey,$os,$device,$userid);
+            return response($savePushKey,200);
+        }
+        catch(\Exception $e)
+        {
+            return response("Bad Request. Please try again",400);
+        }
+
     }
 
 

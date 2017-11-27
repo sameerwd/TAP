@@ -18,42 +18,46 @@ class PushNotification extends Model {
 
 	public function setPushPermission($userid,$permission)
 	{
-		return DB::table('user')->where('userid',$userid)->update(array('isPermitted' => $permission));
+		return DB::table('users')->where('userid',$userid)->update(array('permissionAccepted' => $permission));
 	}
 
 
-	public function sendPostNotfication($userid,$courseid)
+	public function sendPostNotfication($userid,$ucid)
 	{
 		$sql = "select userid, title, firstname, lastname, usertype from users where userid = ".$userid." and status = 1";
+		$getUserForNotification = DB::select($sql);
 		$user = "";
-		$con=mysqli_connect(DB_HOST,DB_USER,DB_PASSWORD,DB_DATABASE);
-		if ($result = mysqli_query($con, $sql))
+		if ($getUserForNotification > 0)
 		{
-			if($result->num_rows>0){
-				$row = mysqli_fetch_assoc($result);
-				if($row['usertype'] == 2){//send notification to all students
-					$user = $row['title'] . " " . $row['firstname'] . " " . $row['lastname'];
+				if($getUserForNotification[0]->usertype == 2){//send notification to all students
+					$user = $getUserForNotification[0]->title . " " . $getUserForNotification[0]->firstname . " " . $getUserForNotification[0]->lastname;
+					
 					$sql = "SELECT distinct users.userid, firstname, lastname, userType, title, device, pushkey, permissionAccepted FROM student_course, users where users.userid!=".$userid." and users.userid= student_course.userid and ucid= ".$ucid." ORDER BY firstname";
+					
+					$getAllStudentsForNot = DB::select($sql);
+
 					$arrUsersIOS = array();
 					$arrUsersAndroid = array();
 					$arrUsersPermissionsIOS = array();
 					$arrUsersPermissionsAndroid = array();
 					$permission = 1;
-					$result = mysqli_query($con,$sql);
-					while($row = $result->fetch_assoc())
+					
+					if(count($getAllStudentsForNot) > 0)
 					{
-						$device = $row["device"];
-                                                if($device=="ios"){
-							$deviceToken = $row["pushkey"];
-							$permission = $row["permissionAccepted"];
-							array_push($arrUsersIOS,$deviceToken);
-							array_push($arrUsersPermissionsIOS,$permission);
-						}
-						else if($device=="android"){
-							$deviceToken = $row["pushkey"];
-							$permission = $row["permissionAccepted"];
-							if($permission==1){
-								array_push($arrUsersAndroid,$deviceToken);
+						foreach ($getAllStudentsForNot as $student) {
+							$device = $student->device;
+                            if($device=="ios"){
+								$deviceToken = $student->pushkey;
+								$permission = $student->permissionAccepted;
+								array_push($arrUsersIOS,$deviceToken);
+								array_push($arrUsersPermissionsIOS,$permission);
+							}
+							else if($device=="android"){
+								$deviceToken = $student->pushkey;
+								$permission = $student->permissionAccepted;
+								if($permission==1){
+									array_push($arrUsersAndroid,$deviceToken);
+								}
 							}
 						}
 					}
@@ -70,7 +74,21 @@ class PushNotification extends Model {
 						
 						sendPushAndroid($arrUsersAndroid, array('message' => $message));
 					}
+				}
+		}	
+	}
+	
+
+	private function saveDeviceKey($deviceid,$type,$siteid,$userid)
+	{
+		$sql = "insert into token(deviceid,os,siteid,userid) values(".$deviceid.",'".$type."',".$siteid.",".$userid.")";
+		return DB::select(DB::raw($sql));
 	}
 
 
+	private function savePushKey($pushkey,$os,$device,$userid)
+	{
+		$sql = "update users set pushkey = ".$pushkey." and os = ".$os." and ".$device." where userid =".$userid;
+		return DB::select(DB::raw($sql));
+	}	
 }

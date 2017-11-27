@@ -39,31 +39,14 @@ class SettingsController extends Controller
     }
 
 
-    /* This function lists the current student courses*/
-    public function listStudentCourses()
+    public function getTAPPosts()
     {
-            courseObj->getCourseController();
+        return response('TAP Posts',200);
     }
 
-
-    /* This function updates the student course details*/
-    public function updateStudentCourse()
+    public function getTAPInstructorPosts()
     {
-
-    }
-
-    /* This function creates a course for student*/
-
-    public function createStudentCourse()
-    {
-
-    }
-
-
-    /* This function creates a new course*/
-    public function create()
-    {
-        
+        return response('TAP Instructor Posts',200);
     }
 
 }

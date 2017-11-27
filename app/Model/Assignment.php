@@ -18,7 +18,7 @@ class Assignment extends Model {
 	
 	public function createAssignment($data)
 	{
-		$insertArray = array('title' => $data['title'], 'description' => $data['description'], 'duedate' => $data['duedate'], 'userid' => $data['userid'], 'courseid' => $data['courseid']);
+		$insertArray = array('title' => $data->title, 'description' => $data->description, 'duedate' => $data->duedate, 'userid' => $data->userid, 'courseid' => $data->courseid);
 
 		return DB::table('assignment')->insertGetId($insertArray);
 	}
@@ -55,5 +55,23 @@ class Assignment extends Model {
 		return DB::table('assignment')->where('assignmentid',$asid)->delete();
 	}
 
+	public function getAssignmentByDate($userid,$duedate)
+	{
+		$sql = "SELECT a.assignmentid, a.title, a.description, a.courseid, u.course FROM assignment a, user_course u where u.ucid = a.courseid and a.duedate ='".$duedate."' and a.userid = ".$userid;
+
+		return DB::select($sql);
+	}
+
+	public function updateAssignment($title,$detail,$duedate,$courseid,$assignmentid)
+	{
+		$sql = "update assignment set title = '".$title."', description = '".$detail."', duedate = '".$duedate."', courseid = ".$courseid." where assignmentid = ".$assignmentid;
+
+		return DB::select(DB::raw($sql));
+	}
+
+	public function getAssignmentById($assignmentid)
+	{
+		return DB::table('assignment')->where('assignmentid',$assignmentid)->count();
+	}
 
 }

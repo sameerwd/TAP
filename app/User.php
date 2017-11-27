@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Model;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Authenticatable;
@@ -16,7 +16,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     use Authenticatable;
 
     //
-    protected $table = 'user';
+    protected $table = 'users';
         
     /**
      * The attributes that are mass assignable.
@@ -32,3 +32,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $hidden = ['password'];
+
+    public function getEmailForPasswordReset() {
+        
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+
+    }
+
+}
