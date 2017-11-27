@@ -50,12 +50,12 @@ Route::post('updateInstructorCourse', 'CourseController@updateInstructorCourse')
 //Route::post('setPushPermission', 'PushNotificationController@activatePush');
 
 /*Message related APIs*/
-Route::post('getThreads', 'ChatController@getThreads')->middleware('auth');
-Route::post('getThreadMessage', 'ChatController@getThreadMessage')->middleware('auth');
-Route::post('getUserThread', 'ChatController@getUserThreads')->middleware('auth');
-Route::post('listUserThreads', 'ChatController@getUserThreads')->middleware('auth');
-Route::post('saveMessage', 'ChatController@saveMessage')->middleware('auth');
-Route::post('updateNotificationPermission', 'PushNotificationController@activatePush')->middleware('auth');
+Route::post('getThreads', 'ChatController@getThreads');
+Route::post('getThreadMessage', 'ChatController@getThreadMessage');
+Route::post('getUserThread', 'ChatController@getUserThreads');
+Route::post('listUserThreads', 'ChatController@getUserThreads');
+Route::post('saveMessage', 'ChatController@saveMessage');
+Route::post('updateNotificationPermission', 'PushNotificationController@activatePush');
 
 
 /*System Related APIs*/

@@ -66,7 +66,7 @@ class CourseController extends Controller
     {
             $data       = $_POST["data"];
             $decodeData = json_decode($data);
-            $user_id = Auth::user()->id;
+            //$user_id = Auth::user()->id;
             //$login_key = \Session::getId();
             $courseObj = new Course();
 
