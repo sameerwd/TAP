@@ -69,6 +69,7 @@ class CourseController extends Controller
             //$user_id = Auth::user()->id;
             //$login_key = \Session::getId();
             $courseObj = new Course();
+            $user_id = $decodeData->user_id;
 
             try{
                     $getInstructorCourses = $courseObj->getInstructorCourse($user_id);
