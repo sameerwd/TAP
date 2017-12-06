@@ -23,6 +23,17 @@ class Course extends Model {
 		return DB::select("SELECT ucid FROM user_course where ucid = ".$course);
 	}
 
+
+	/*public function checkValidCourseId()
+	{
+		"SELECT ucid FROM user_course where ucid =".$course." and expirydate >= CURDATE()";
+	}*/
+
+	public function checkStudentCourse($courses,$user_id)
+	{
+		return DB::select("SELECT ucid FROM student_course where ucid = ".$courses." AND userid =".$user_id."");
+	}
+
 	public function createStudentCourse($userid,$course)
 	{
 		$insertArray = array('userid' => $userid, 'ucid' => $course);
@@ -34,10 +45,10 @@ class Course extends Model {
 		return DB::select("SELECT * FROM student_course where ucid =".$ucid." and userid = ".$userid);
 	}
 
-	public function updateStudentCourse($ucid,$scid)
+	public function updateStudentCourse($ucid,$user_id)
 	{
         $updateArray = array('ucid' => $ucid);
-        return DB::table('student_course')->where('scid',$scid)->update($updateArray);
+        return DB::table('student_course')->where('userid',$user_id)->update($updateArray);
 	}
 
 	public function resetStudentCourse($ucid)
@@ -70,6 +81,16 @@ class Course extends Model {
 	public function getInstructorCourse($user_id)
 	{
 		return DB::table('user_course')->where('userid',$user_id)->get();	
+	}
+
+	public function checkInstructorCourse($course)
+	{
+		return DB::table('user_course')->where('course',$course)->count();
+	}
+
+	public function checkExistingStudentCourseId($course,$user_id)
+	{
+		return DB::select("SELECT * FROM student_course where ucid =".$course." and userid = ".$user_id."");
 	}
 
 }

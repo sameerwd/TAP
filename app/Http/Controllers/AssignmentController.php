@@ -58,10 +58,17 @@ class AssignmentController extends Controller
         $courseid = $decodeData->courseid;       
 
             try{
-                    $createAssignment = $assignmentObj->createAssignment($decodeData);
+                    $checkDuplicateAssignment = $assignmentObj->checkDuplicateAssignment($decodeData->title,$user_id);
 
-                    $notify = $pushNotification->sendPostNotfication($userid,$courseid);    
-                    return response($createAssignment,200);
+                    if($checkDuplicateAssignment == 0)
+                    {
+                        $createAssignment = $assignmentObj->createAssignment($decodeData);
+
+                        $notify = $pushNotification->sendPostNotfication($userid,$courseid);    
+                        return response($createAssignment,200);
+                    }
+                    else
+                        return response('Assignment already exists',205);
             }
             catch(\Exception $e)
             {

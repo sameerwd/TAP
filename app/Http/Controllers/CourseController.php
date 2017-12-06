@@ -1,13 +1,13 @@
 <?php
 
-// FileName                     : CourseController.php                 
+// FileName             : CourseController.php                 
 // Author               : Sameer Deshpande                    
 // Date of Creation     : 26/09/2017                        
 // Description          : Course Controller                   
 //                          
-// Last Modified By         :                        
+// Last Modified By     :                        
 // Last Modified On     :                       
-// Modifications Done       :                   
+// Modifications Done   :                   
 //                          
 // +--------------------------------------------------------------------------------------------------+//                       
 
@@ -86,44 +86,32 @@ class CourseController extends Controller
     public function updateStudentCourse()
     {
           $courseObj = new Course();
-          $course = $_GET['ucid'];
-    
-        $sqlCheckValidCourseID = "SELECT ucid FROM user_course where ucid =".$course." and expirydate >= CURDATE()";
-        if ($result = mysqli_query($con, $sqlCheckValidCourseID))
-        {
-            if($result->num_rows>0){//valid ucid
-                $sqlIfExistingCourseID = "SELECT * FROM student_course where ucid =".$course." and userid = ".$_GET['userid'];
-                if ($result = mysqli_query($con, $sqlIfExistingCourseID)){
-                    if($result->num_rows>0){
-                            echo json_encode([
-                            "status" => "CourseID already registered for user",
-                        ]);
-                    }
-                    else{
-                        $sql = "insert into student_course(userid, ucid) values(".$_GET['userid'].",".$course.")";
+          $data = $_POST["data"];
+          $decodeData = json_decode($data);
 
-                        $retval = mysqli_query($con, $sql);
-                        $codes[] = mysqli_insert_id($con);
-                        echo json_encode([
-                                "status" => "success",
-                            ]);
-                    }
-                }
+          $course = $decodeData->course;
+          $user_id = $decodeData->user_id;
+    
+          $sqlCheckValidCourseID = $courseObj->checkValidCourseId($course);
+
+
+            if(count($sqlCheckValidCourseID) > 0)
+            {
+                $updateStudentCourse = $courseObj->updateStudentCourse($user_id,$course);
             }
             else{
                 echo json_encode([
                         "status" => "Invalid CourseID",
                     ]);
             }
-        }  
-    }
+    }  
 
     /* This function creates a course for student*/
 
     public function createStudentCourse()
     {
 
-        // data = {"user_id":"2","search_type":"basic_search", "courses":1,2,3,4} course_ids  
+        // data = {"user_id":"2", "courses":"1"} course_ids  
                 
         $data       = $_POST["data"];
         $decodeData = json_decode($data);
@@ -131,20 +119,21 @@ class CourseController extends Controller
         //$login_key = \Session::getId();
         $courseObj = new Course();
 
-        $courses = explode(",", $data['courses']);
-        $codes = array();
+        $courses = $decodeData->courses;
+        $user_id = $decodeData->user_id;
 
             try{
-                foreach($courses as $course) {
-                    $result = $courseObj->checkValidCourseId($course);
+                    $result = $courseObj->checkValidCourseId($courses);
+                    $checkStudentCourse = $courseObj->checkStudentCourse($courses,$user_id);
                     //      echo $sqlCheckValidCourseID;
-                    if (count($result) > 0)
+                    if (count($result) > 0 && count($checkStudentCourse) == 0)
                     {                
-                        $createStudentCourse[] = $courseObj->createStudentCourse($course,$data['user_id']);
+                        $saveStudentCourse = $courseObj->createStudentCourse($courses,$user_id);
+                        return response(1,200);
                     }
-                }
-
-                return response(1,200);
+                    else
+                        return response("Course does not exist/Already added",206);
+                    
             }catch(\Exception $e)
             {
                 return response($e,400);
@@ -155,24 +144,26 @@ class CourseController extends Controller
     /* This function creates a new course*/
     public function create()
     {
-        // data = {"user_id":"2","search_type":"basic_search", "courses":1,2,3,4, "expirydate":""} course_ids  
+        // data = {"user_id":"2", "courses":"SA", "expirydate":""} course_ids  
         
         $data       = $_POST["data"];
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId();
         $courseObj = new Course();
-        $courses = explode(",", $decodeData->courses);
+        $courses = $decodeData->courses;
+        $user_id = $decodeData->user_id;
         $codes = array();
 
         try{
-        foreach($courses as $course) {
-            if(strlen($course)>0){
-                
-                $createCourse[] = $courseObj->createCourse($course,$decodeData);
-            }
-        }
-            return response(1,200);
+                $checkCourse = $courseObj->checkInstructorCourse($courses);
+                if($checkCourse == 0)
+                {        
+                    $createCourse = $courseObj->createCourse($course,$decodeData);
+                    return response(1,200);
+                }
+                else
+                    return response('Course already exists',205);
         }catch(\Exception $e)
         {
             return response($e,400);
@@ -184,7 +175,7 @@ class CourseController extends Controller
     /* This function is used to update a course */
     public function updateCourse()
     {
-        // data = {"user_id":"2", "ucid":"2", "scid":"3","search_type":"basic_search", "courses":1,2,3,4} course_ids  
+        // data = {"user_id":"2", "ucid":"2", "scid":"3","search_type":"basic_search", "courses":"2"} course_ids  
 
         $data       = $_POST["data"];
         $decodeData = json_decode($data);
@@ -204,13 +195,11 @@ class CourseController extends Controller
             if (count($result) > 0){
 
                     $updateCourse = $courseObj->updateStudentCourse($ucid,$scid);
-                    
                     return response($updateCourse,200);
                 }
                 else{
-                    return response('Already Exists',205);
+                    return response('Course already exists',205);
                 }
-            
     }
     else{
             return response('Invalid',400);
@@ -253,15 +242,21 @@ class CourseController extends Controller
         $ucid = $decodeData->ucid;
         $expiry = $decodeData->expiry;
 
-        $deleteCourse = $courseObj->deleteStudentCourse($ucid);
+        try{
+            $deleteCourse = $courseObj->deleteStudentCourse($ucid);
         
          if($deleteCourse){  
                 $updateCourse = $courseObj->resetStudentCourse($ucid); 
-                return array("status" => "success", "data" => null, "message" => "Course Reset Successfully");
+                return response($updateCourse,200); 
             }
             else{
-                return array("status" => "fail", "data" => null, "message" => "Cannot Reset Course");
+                return response("Course not found/deleted",207);
             }
+        }
+        catch(\Exception $e)
+        {
+            return response("Bad Request. Please try again",400);
+        }       
     }
 
 }
