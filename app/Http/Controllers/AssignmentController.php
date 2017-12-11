@@ -231,13 +231,14 @@ class AssignmentController extends Controller
 
         $data = $_POST["data"];
         $decodeData = json_decode($data);
-        $userid = Auth::user()->id;
+        //$userid = Auth::user()->id;
         //$login_key = \Session::getId(); 
         $duedate = $decodeData->duedate;
         $title = $decodeData->title;
         $courseid = $decodeData->courseid;
         $assignmentid = $decodeData->assignmentid;
-        $detail = $decodeData->detail;        
+        $detail = $decodeData->detail;
+        $userid = $decodeData->user_id;        
 
         try{
             $updateAssignment = $assignmentObj->updateAssigment($title,$detail,$duedate,$courseid,$assignmentid);
@@ -281,7 +282,7 @@ class AssignmentController extends Controller
                     array_push($arrUsers, $tempArray);
                 }
             }
-            echo json_encode($arrUsers);
+            return response($arrUsers,200);
         }
         else{
             $sql = "SELECT ucid FROM user_course where userid = ".$userid;
@@ -304,22 +305,16 @@ class AssignmentController extends Controller
                             array_push($arrUsers, $tempArray);
                         }
                     }
-                    echo json_encode($arrUsers);
+                    return response($arrUsers,200);
                 }
                 else{
-                    echo json_encode([
-                        "status" => "error",
-                        "message" => "No course found, please add course to see your peers",
-                    ]);
+                    return response("Course Not Found",207);
                 }
             }
         }
     }
     else{
-        echo json_encode([
-                "status" => "error",
-                "message" => "No course found, please add course to see your peers",
-            ]);
+        return response("Course Not Found",207);
     }
     }
 }

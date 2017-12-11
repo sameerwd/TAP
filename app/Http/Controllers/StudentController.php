@@ -108,11 +108,11 @@ class StudentController extends Controller
 
         if(!$getStudents){
                   
-                    return array("status" => "fail", "data" => null, "message" => "No student found");
+                    return response("No Student Found",208);
                 }
                 else{
 
-                    return array("status" => "success", "data" => null, "message" => "Student List");
+                    return response($getStudents,200);
                 }
     }
 

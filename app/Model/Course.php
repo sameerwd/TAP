@@ -56,9 +56,14 @@ class Course extends Model {
 		return DB::table('student_course')->where('ucid',$ucid)->update(array("expirydate" => date("dd/MM/yy H:i:s")));
 	}
 
-	public function deleteStudentCourse($ucid)
+	public function deleteStudentCourse($ucid,$user_id,$course)
 	{
-        return DB::table('student_course')->where('ucid',$ucid)->delete();
+        return DB::table('student_course')->where('ucid',$ucid)->where('userid',$user_id)->delete();
+	}
+
+	public function checkInstructorCourse($course)
+	{
+		return DB::table('user_course')->where('course',$course)->pluck('ucid');
 	}
 
 	public function deleteInstructorCourse($ucid)

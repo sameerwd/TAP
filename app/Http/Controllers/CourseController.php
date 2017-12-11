@@ -259,4 +259,63 @@ class CourseController extends Controller
         }       
     }
 
+    public function deleteCourse()
+    {
+        $data       = $_POST["data"];
+        $decodeData = json_decode($data);
+        //$user_id = Auth::user()->id;
+        //$login_key = \Session::getId();
+        $courseObj = new Course();
+
+        $ucid = $decodeData->ucid;
+        $user_id = $decodeData->user_id;
+        $course = $decodeData->course;
+
+        try{
+            $checkCourse = $courseObj->checkStudentCourse($ucid,$user_id);
+        
+         if($checkCourse > 0){
+                
+                $deleteCourse = deleteStudentCourse($ucid,$user_id,$course);       
+                return response($deleteCourse,200); 
+            }
+            else{
+                return response("Course not found/deleted",207);
+            }
+        }
+        catch(\Exception $e)
+        {
+            return response("Bad Request. Please try again",400);
+        }       
+    }
+
+    public function deleteInstructorCourse()
+    {
+        $data       = $_POST["data"];
+        $decodeData = json_decode($data);
+        //$user_id = Auth::user()->id;
+        //$login_key = \Session::getId();
+        $courseObj = new Course();
+
+        $user_id = $decodeData->user_id;
+        $course = $decodeData->course;
+
+        try{
+            $checkCourse = $courseObj->checkInstructorCourse($course);
+        
+         if($checkCourse > 0){
+                
+                $deleteCourse = deleteInstructorCourse($checkCourse);       
+                return response($deleteCourse,200); 
+            }
+            else{
+                return response("Course not found/deleted",207);
+            }
+        }
+        catch(\Exception $e)
+        {
+            return response("Bad Request. Please try again",400);
+        }       
+    }
+
 }
