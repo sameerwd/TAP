@@ -74,4 +74,9 @@ class Assignment extends Model {
 		return DB::table('assignment')->where('assignmentid',$assignmentid)->count();
 	}
 
+	public function checkDuplicateAssignment($title,$userid)
+	{
+		return DB::table('assignment')->where('title',$title)->where('userid',$userid)->count();
+	}
+
 }
