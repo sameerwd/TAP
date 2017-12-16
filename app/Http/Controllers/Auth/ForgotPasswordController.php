@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use App\Model\User;
+use Illuminate\Http\Request;
 
 class ForgotPasswordController extends Controller
 {
@@ -31,22 +32,23 @@ class ForgotPasswordController extends Controller
         $this->middleware('guest');
     }
 
-    public function forgotPassword()
+    public function forgotPassword(Request $request)
     {
 
         //$data = '{"email":"amey@gmail.com"}'; 
 
-        $data = $_POST["data"];
+        $data = use Illuminate\Http\Request;
         $decodeData = json_decode($data);
         $userObj = new User();
 
         if(isset($decodeData->email) && $decodeData->email != "")
             $checkUser = $userObj->findUserByEmail($decodeData->email);
         else
-            return array("status" => "fail", "data" => null,"message" => "Please enter a valid email");
+
+            return ;
 
         if($checkUser == 0)
-            return array("status" => "fail", "data" => null,"message" => "Email is not registered in the system.");
+            return ;
     
         $password = rand(10,100);
         $email = $decodeData->email;
@@ -55,7 +57,7 @@ class ForgotPasswordController extends Controller
         //  echo $password;
         $updatePassword = $userObj->updateUserPassword(bcrypt($password),$email);
 
-    
+        
         if($updatePassword > 0){
              $subject = "Password help assistance - Get back your password";
              $message = "<b>Dear TAP user,</b><br><br>";
@@ -79,10 +81,10 @@ class ForgotPasswordController extends Controller
              $retval = mail ($email,$subject,$message,$header);
          
              if( $retval == true ) {
-                return array("status" => "success", "data" => null,"message" => "Password sent successfully");
+                return ("Password sent successfully",200);
             }
             else{
-                return array("status" => "fail", "data" => null,"message" => "Unable to send reset password. Please try again");
+                return ("Bad Request. Please try again",400);
             }
         }
     }

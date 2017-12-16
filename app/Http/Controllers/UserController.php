@@ -18,6 +18,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -39,23 +40,22 @@ class UserController extends Controller
     }
 
     /* This function is to validate user in the system*/
-    public function validateUser()
+    public function validateUser(Request $request)
     {
         // data = {"user_id":"2","email":"2","password":"werty","pushkey":"","device":"ios"}    
         $userObj = new User();
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         
         $pushkey = $decodeData->pushkey;
         $device = $decodeData->device;
         $email = $decodeData->email; 
 
-
         try{
                 $getUser = $userObj->checkUser($email);
 
                 if(count($getUser) == 0)
-                    return response("No User Found",208);        
+                    return response("No User Found",1008);        
 
                 $updateUser = $userObj->updateUserLog($pushkey,$device,$getUser[0]->userid); 
                 return response($updateUser,200);               
@@ -66,30 +66,29 @@ class UserController extends Controller
         }
     }
 
-    public function show()
+    public function show(Request $request)
     {
         $userObj = new User();
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         $user_id = Auth::user()->id;
 
         $listUsers = $userObj->getUsers();
 
         if(count($listUsers) > 0){
-                
-                return array("status" => "success", "data" => $listUsers, "message" => "User List");
+                return response($listUsers,200);
             }
             else{
-                return array("status" => "fail", "data" => null, "message" => "No User Found");
+                return response('Not Found',1010);
             }
 
     }
 
-    public function getUserPost()
+    public function getUserPost(Request $request)
     {
         //data = {"userid":"2"}
         $userObj = new User();
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         $user_id = Auth::user()->id;
 
@@ -106,11 +105,11 @@ class UserController extends Controller
     }
 
 
-    public function getUserCourses()
+    public function getUserCourses(Request $request)
     {
         //data = {"userid":"2"}
         $userObj = new User();
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$userid = $_GET['userid'];
         $userid = $decodeData->userid; 
@@ -126,11 +125,11 @@ class UserController extends Controller
     
     }
 
-    public function getSchools()
+    public function getSchools(Request $request)
     {
         //data = {"schoolid":"2"}
         $userObj = new User();
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$userid = $_GET['userid'];
         $schoolid = 0;

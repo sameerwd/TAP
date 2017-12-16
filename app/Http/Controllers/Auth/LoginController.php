@@ -44,7 +44,7 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-                $data = $_POST["data"];
+                $data = json_encode($request->input());
                 $decodeData = json_decode($data);
                 $userObj = new User();
                 
@@ -68,9 +68,9 @@ class LoginController extends Controller
             if(count($returnArray) > 0)
                 return response($returnArray,200);
             else
-                return response("User Not Active",200);
+                return response("User Not Active",1002);
         }
-        return response("Incorrect Username or Password",200);
+        return response("Incorrect Username or Password",1003);
         // authentication failure! lets go back to the login page     */          
     }
     
@@ -78,7 +78,7 @@ class LoginController extends Controller
     // logout function
     public function logout(Request $request) {
         
-        $data           = $_POST["data"];
+        $data           = json_encode($request->input());
         $decodeData     = json_decode($data);
         $userObj    = new User(); 
         $user_id = $decodeData->user_id;

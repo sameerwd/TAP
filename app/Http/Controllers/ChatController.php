@@ -18,6 +18,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use DB;
+use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
@@ -40,11 +41,11 @@ class ChatController extends Controller
     }
 
 
-    public function getChatsList()
+    public function getChatsList(Request $request)
     {
         //data = {"userid":"3", "postid":"3"}
         
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
 
         $decodeData = json_decode($data);
         $chatObj = new Chats();
@@ -63,10 +64,10 @@ class ChatController extends Controller
     }
 
 
-    public function getThreads()
+    public function getThreads(Request $request)
     {
 
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
 
         $decodeData = json_decode($data);
         $chatObj = new Chats();
@@ -101,9 +102,9 @@ class ChatController extends Controller
 
     }
 
-    public function getUserThreads()
+    public function getUserThreads(Request $request)
     {
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
 
         $decodeData = json_decode($data);
         $chatObj = new Chats();
@@ -136,10 +137,10 @@ class ChatController extends Controller
     }
 
 
-    public function saveMessage()
+    public function saveMessage(Request $request)
     {
 
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
 
         $decodeData = json_decode($data);
         $chatObj = new Chats();
@@ -200,9 +201,9 @@ class ChatController extends Controller
             }
     }
 
-     public function getComments()
+     public function getComments(Request $request)
     {
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
 
         $decodeData = json_decode($data);
         $chatObj = new Chats();
@@ -220,10 +221,10 @@ class ChatController extends Controller
 
     }
 
-    public function getThreadMessage()
+    public function getThreadMessage(Request $request)
     {
 
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
 
         $decodeData = json_decode($data);
         $chatObj = new Chats();

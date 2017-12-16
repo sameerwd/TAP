@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -54,9 +55,9 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator()
+    protected function validator(Request $request)
     {
-        $data       = $_POST["data"];
+        $data       = json_encode($request->input());
         $decodeData = json_decode($data);
                 $user_id = Auth::user()->id;
                 $login_key = \Session::getId();
@@ -74,12 +75,12 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    public function create()
+    public function create(Request $request)
     {
 
         //$data = '{"first_name":"amey", "last_name": "jagtap","email":"amey@gmail.com","password":"amey123","user_type":"admin","os":"iOS","device":"moto","pushkey":"asdet"}'; 
 
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         $userObj = new User();
                 //$user_id = Auth::user()->id;
@@ -91,7 +92,7 @@ class RegisterController extends Controller
             $checkUserExixts = $userObj->findUserByEmail($email);
 
             if($checkUserExixts > 0)
-                return response("User already exists",200);
+                return response("User already exists",1012);
         }
 
 
@@ -137,9 +138,9 @@ class RegisterController extends Controller
      * @param  $email
      * @return Boolean status
      */
-    public function checkEmail()
+    public function checkEmail(Request $request)
     {
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         $userObj = new User();
 

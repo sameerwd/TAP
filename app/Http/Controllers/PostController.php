@@ -16,6 +16,7 @@ namespace App\Http\Controllers;
 use App\Model\Post;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -30,9 +31,9 @@ class UserController extends Controller
 	/*
 		Listing of the posts
 	*/
-	public function getPosts()
+	public function getPosts(Request $request)
 	{
-		$data = $_POST["data"];
+		$data = json_encode($request->input());
 
         $decodeData = json_decode($data);
         $postObj = new Post();

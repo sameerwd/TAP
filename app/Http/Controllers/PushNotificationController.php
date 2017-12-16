@@ -18,6 +18,7 @@ use App\Model\Course;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 
 class PushNotificationController extends Controller
 {
@@ -40,11 +41,11 @@ class PushNotificationController extends Controller
     }
 
 
-    public function activatePush()
+    public function activatePush(Request $request)
     {
        // data = {"user_id":"2","search_type":"basic_search", "permission":"1"} course_ids    
         
-        $data       = $_POST["data"];
+        $data       = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId(); 
@@ -63,9 +64,9 @@ class PushNotificationController extends Controller
         }
     }
 
-    public function saveDeviceKey()
+    public function saveDeviceKey(Request $request)
     {
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         $pushNotificationObj = new PushNotification();
 
@@ -88,9 +89,9 @@ class PushNotificationController extends Controller
     }
 
 
-    public function savePushKey()
+    public function savePushKey(Request $request)
     {
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         $pushNotificationObj = new PushNotification();
 

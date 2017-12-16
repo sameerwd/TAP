@@ -16,6 +16,7 @@ namespace App\Http\Controllers;
 use App\Model\Student;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
@@ -36,12 +37,12 @@ class StudentController extends Controller
         
     }
 
-    public function delete()
+    public function delete(Request $request)
     {
         // data = {"userid":"2","scid":"2"}    
         $studentObj = new Student();
 
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId(); 
@@ -52,21 +53,21 @@ class StudentController extends Controller
 
                 if(!$deleteStudentCourse){
                   
-                    return array("status" => "fail", "data" => null, "message" => "Could not delete course");
+                    return response("Bad Request. Please try again",400);
                 }
                 else{
 
-                    return array("status" => "success", "data" => null, "message" => "Student course deleted successfully");
+                    return response("Student deleted successfully",200);
                 }
      
     }
 
-    public function getStudentCourses()
+    public function getStudentCourses(Request $request)
     {
         // data = {"userid":"2","scid":"2"}    
         $studentObj = new Student();
 
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId(); 
@@ -77,19 +78,19 @@ class StudentController extends Controller
 
                 if(!$getStudentCourses){
                   
-                    return array("status" => "fail", "data" => null, "message" => "No course found, please add course to see your peers");
+                    return response("No course found",1007);
                 }
                 else{
 
-                    return array("status" => "success", "data" => null, "message" => "Student Courses");
+                    return response($getStudentCourses,200);
                 }
     }
 
-    public function getStudents()
+    public function getStudents(Request $request)
     {
         $studentObj = new Student();
 
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId(); 
@@ -108,7 +109,7 @@ class StudentController extends Controller
 
         if(!$getStudents){
                   
-                    return response("No Student Found",208);
+                    return response("No Student Found",1008);
                 }
                 else{
 
@@ -116,13 +117,13 @@ class StudentController extends Controller
                 }
     }
 
-    public function createStudentCourse()
+    public function createStudentCourse(Request $request)
     {
 
         $studentObj = new Student();
 
         //$data = "{"userid:"","courses":"2,3,4,5"}";
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId(); 
@@ -145,10 +146,10 @@ class StudentController extends Controller
         }
 
         if(!$createStudent){
-                    return array("status" => "fail", "data" => null, "message" => "Student not registered");
+                    return response("Bad Request. Please try again",400);
                 }
                 else{
-                    return array("status" => "success", "data" => null, "message" => "Student registered successfully");
+                    return response("Student registered successfully",200);
                 }
     }    
 

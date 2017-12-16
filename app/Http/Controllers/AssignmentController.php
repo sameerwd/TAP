@@ -18,6 +18,8 @@ use App\Model\PushNotification;
 use App\Http\Controllers\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+use DB;
 
 class AssignmentController extends Controller
 {
@@ -41,14 +43,14 @@ class AssignmentController extends Controller
 
 
     /* This function creates a new assignment*/
-    public function create()
+    public function create(Request $request)
     {
 
         //data = {"userid":"2","search_type":"basic_search", "duedate":"", "courseid":"2","title":"wqeerd","description":"asdasd"}    
         $assignmentObj = new Assignment();
         $pushNotification = new PushNotification();
 
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId(); 
@@ -68,7 +70,7 @@ class AssignmentController extends Controller
                         return response($createAssignment,200);
                     }
                     else
-                        return response('Assignment already exists',205);
+                        return response('Assignment already exists',1005);
             }
             catch(\Exception $e)
             {
@@ -80,12 +82,12 @@ class AssignmentController extends Controller
     /*
         List the assignments    
     */
-    public function listAssignment()
+    public function listAssignment(Request $request)
     {
         $assignmentObj = new Assignment();
 
         //$data = '{"usertype":"2", "userid": "2","courseid":"3"}';
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         
@@ -106,13 +108,13 @@ class AssignmentController extends Controller
         }         
     }
 
-    public function listAssignmentByMonth()
+    public function listAssignmentByMonth(Request $request)
     {
 
         $assignmentObj = new Assignment();
 
         //$data = '{"month":"2", "userid": "2","year":"3"}';
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         
@@ -136,13 +138,13 @@ class AssignmentController extends Controller
     
     }
 
-    public function deleteAssignment()
+    public function deleteAssignment(Request $request)
     {
 
         $assignmentObj = new Assignment();
 
         //$data = '{"month":"student", "userid": "2","year":"3"}';
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         $assignmentId = $decodeData->assignmentId;
@@ -154,7 +156,7 @@ class AssignmentController extends Controller
                 $checkAssignmentExists = $assignmentObj->getAssignmentById($assignmentId);
                     
                 if($checkAssignmentExists == 0)
-                    return response("No Assignments Found",200);
+                    return response("No Assignments Found",1001);
    
                 $deleteAssignment = $assignmentObj->deleteAssignment($assignmentId);    
                 return response("Assignment Deleted Successfully",200);
@@ -166,13 +168,13 @@ class AssignmentController extends Controller
         }
     }
 
-    public function getAssignmentByDate()
+    public function getAssignmentByDate(Request $request)
     {
 
         $assignmentObj = new Assignment();
 
         //$data = '{"duedate":"12-23-2017", "userid": "2","year":"3"}';
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
 
@@ -191,12 +193,12 @@ class AssignmentController extends Controller
                 
     }
 
-    public function updateAssignment()
+    public function updateAssignment(Request $request)
     {
 
         $assignmentObj = new Assignment();
 
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId(); 
@@ -211,7 +213,7 @@ class AssignmentController extends Controller
             $checkAssignmentExists = $assignmentObj->getAssignmentById($assignmentid);
                     
                 if($checkAssignmentExists == 0)
-                    return response("No Assignments Found",200);
+                    return response("No Assignments Found",1001);
                 
             $updateAssignment = $assignmentObj->updateAssignment($title,$detail,$duedate,$courseid,$assignmentid);
             return response($updateAssignment,200);
@@ -224,12 +226,12 @@ class AssignmentController extends Controller
     }
 
 
-    public function getFriends()
+    public function getFriends(Request $request)
     {
 
         $assignmentObj = new Assignment();
 
-        $data = $_POST["data"];
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         //$userid = Auth::user()->id;
         //$login_key = \Session::getId(); 
@@ -251,11 +253,12 @@ class AssignmentController extends Controller
 
 
         $sql = "SELECT ucid FROM student_course where userid = ".$userid;
-//  echo $sql;die;
+        $getUserCourses = DB::select($sql);
+
     $arrUserCourse = array();
-    if ($result = mysqli_query($con, $sql))
-    {
-        if($result->num_rows>0){
+        if (count($getUserCourses) > 0)
+        {
+        
             while($row = $result->fetch_array(MYSQLI_NUM))
             {
                 array_push($arrUserCourse,$row[0]);
@@ -308,13 +311,10 @@ class AssignmentController extends Controller
                     return response($arrUsers,200);
                 }
                 else{
-                    return response("Course Not Found",207);
+                    return response("Course Not Found",1007);
                 }
             }
-        }
-    }
-    else{
-        return response("Course Not Found",207);
-    }
+            }
+    
     }
 }

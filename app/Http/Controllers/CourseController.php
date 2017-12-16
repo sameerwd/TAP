@@ -17,6 +17,7 @@ use App\Model\Course;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
@@ -40,9 +41,9 @@ class CourseController extends Controller
 
 
     /* This function lists the current student courses*/
-    public function listStudentCourses()
+    public function listStudentCourses(Request $request)
     {
-            $data       = $_POST["data"];
+            $data       = json_encode($request->input());
             $decodeData = json_decode($data);
             //$user_id = Auth::user()->id;
             //$login_key = \Session::getId();
@@ -62,9 +63,9 @@ class CourseController extends Controller
 
 
     /*This function lists instructor courses*/
-    public function listInstructorCourses()
+    public function listInstructorCourses(Request $request)
     {
-            $data       = $_POST["data"];
+            $data       = json_encode($request->input());
             $decodeData = json_decode($data);
             //$user_id = Auth::user()->id;
             //$login_key = \Session::getId();
@@ -83,10 +84,10 @@ class CourseController extends Controller
 
 
     /* This function updates the student course details*/  //TODO Check for the functionality with Upendra.
-    public function updateStudentCourse()
+    public function updateStudentCourse(Request $request)
     {
           $courseObj = new Course();
-          $data = $_POST["data"];
+          $data = json_encode($request->input());
           $decodeData = json_decode($data);
 
           $course = $decodeData->course;
@@ -98,22 +99,21 @@ class CourseController extends Controller
             if(count($sqlCheckValidCourseID) > 0)
             {
                 $updateStudentCourse = $courseObj->updateStudentCourse($user_id,$course);
+                return response($updateStudentCourse,200);
             }
             else{
-                echo json_encode([
-                        "status" => "Invalid CourseID",
-                    ]);
+                return response("Invalid Course ID",1009);
             }
     }  
 
     /* This function creates a course for student*/
 
-    public function createStudentCourse()
+    public function createStudentCourse(Request $request)
     {
 
         // data = {"user_id":"2", "courses":"1"} course_ids  
                 
-        $data       = $_POST["data"];
+        $data       = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId();
@@ -132,7 +132,7 @@ class CourseController extends Controller
                         return response(1,200);
                     }
                     else
-                        return response("Course does not exist/Already added",206);
+                        return response("Course does not exist/Already added",1006);
                     
             }catch(\Exception $e)
             {
@@ -142,11 +142,11 @@ class CourseController extends Controller
 
 
     /* This function creates a new course*/
-    public function create()
+    public function create(Request $request)
     {
         // data = {"user_id":"2", "courses":"SA", "expirydate":""} course_ids  
         
-        $data       = $_POST["data"];
+        $data       = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId();
@@ -163,7 +163,7 @@ class CourseController extends Controller
                     return response(1,200);
                 }
                 else
-                    return response('Course already exists',205);
+                    return response('Course already exists',1005);
         }catch(\Exception $e)
         {
             return response($e,400);
@@ -173,11 +173,11 @@ class CourseController extends Controller
     }
 
     /* This function is used to update a course */
-    public function updateCourse()
+    public function updateCourse(Request $request)
     {
         // data = {"user_id":"2", "ucid":"2", "scid":"3","search_type":"basic_search", "courses":"2"} course_ids  
 
-        $data       = $_POST["data"];
+        $data       = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId();
@@ -198,7 +198,7 @@ class CourseController extends Controller
                     return response($updateCourse,200);
                 }
                 else{
-                    return response('Course already exists',205);
+                    return response('Course already exists',1005);
                 }
     }
     else{
@@ -207,9 +207,9 @@ class CourseController extends Controller
 
     }
 
-    public function updateInstructorCourse()
+    public function updateInstructorCourse(Request $request)
     {
-        $data       = $_POST["data"];
+        $data       = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId();
@@ -231,9 +231,9 @@ class CourseController extends Controller
         
     }
 
-    public function resetCourse()
+    public function resetCourse(Request $request)
     {
-        $data       = $_POST["data"];
+        $data       = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId();
@@ -250,7 +250,7 @@ class CourseController extends Controller
                 return response($updateCourse,200); 
             }
             else{
-                return response("Course not found/deleted",207);
+                return response("Course not found/deleted",1007);
             }
         }
         catch(\Exception $e)
@@ -259,9 +259,9 @@ class CourseController extends Controller
         }       
     }
 
-    public function deleteCourse()
+    public function deleteCourse(Request $request)
     {
-        $data       = $_POST["data"];
+        $data       = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId();
@@ -280,7 +280,7 @@ class CourseController extends Controller
                 return response($deleteCourse,200); 
             }
             else{
-                return response("Course not found/deleted",207);
+                return response("Course not found/deleted",1007);
             }
         }
         catch(\Exception $e)
@@ -289,9 +289,9 @@ class CourseController extends Controller
         }       
     }
 
-    public function deleteInstructorCourse()
+    public function deleteInstructorCourse(Request $request)
     {
-        $data       = $_POST["data"];
+        $data       = json_encode($request->input());
         $decodeData = json_decode($data);
         //$user_id = Auth::user()->id;
         //$login_key = \Session::getId();
@@ -309,7 +309,7 @@ class CourseController extends Controller
                 return response($deleteCourse,200); 
             }
             else{
-                return response("Course not found/deleted",207);
+                return response("Course not found/deleted",1007);
             }
         }
         catch(\Exception $e)
