@@ -68,9 +68,9 @@ class LoginController extends Controller
             if(count($returnArray) > 0)
                 return response($returnArray,200);
             else
-                return response("User Not Active",1002);
+                return response("User Not Active",202);
         }
-        return response("Incorrect Username or Password",1003);
+        return response("Incorrect Username or Password",203);
         // authentication failure! lets go back to the login page     */          
     }
     

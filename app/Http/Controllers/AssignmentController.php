@@ -70,7 +70,7 @@ class AssignmentController extends Controller
                         return response($createAssignment,200);
                     }
                     else
-                        return response('Assignment already exists',1005);
+                        return response('Assignment already exists',205);
             }
             catch(\Exception $e)
             {
@@ -156,7 +156,7 @@ class AssignmentController extends Controller
                 $checkAssignmentExists = $assignmentObj->getAssignmentById($assignmentId);
                     
                 if($checkAssignmentExists == 0)
-                    return response("No Assignments Found",1001);
+                    return response("No Assignments Found",201);
    
                 $deleteAssignment = $assignmentObj->deleteAssignment($assignmentId);    
                 return response("Assignment Deleted Successfully",200);
@@ -213,7 +213,7 @@ class AssignmentController extends Controller
             $checkAssignmentExists = $assignmentObj->getAssignmentById($assignmentid);
                     
                 if($checkAssignmentExists == 0)
-                    return response("No Assignments Found",1001);
+                    return response("No Assignments Found",201);
                 
             $updateAssignment = $assignmentObj->updateAssignment($title,$detail,$duedate,$courseid,$assignmentid);
             return response($updateAssignment,200);
@@ -311,7 +311,7 @@ class AssignmentController extends Controller
                     return response($arrUsers,200);
                 }
                 else{
-                    return response("Course Not Found",1007);
+                    return response("Course Not Found",207);
                 }
             }
             }

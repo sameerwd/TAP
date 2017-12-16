@@ -55,7 +55,7 @@ class UserController extends Controller
                 $getUser = $userObj->checkUser($email);
 
                 if(count($getUser) == 0)
-                    return response("No User Found",1008);        
+                    return response("No User Found",208);        
 
                 $updateUser = $userObj->updateUserLog($pushkey,$device,$getUser[0]->userid); 
                 return response($updateUser,200);               
@@ -79,7 +79,7 @@ class UserController extends Controller
                 return response($listUsers,200);
             }
             else{
-                return response('Not Found',1010);
+                return response('Not Found',210);
             }
 
     }

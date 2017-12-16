@@ -102,7 +102,7 @@ class CourseController extends Controller
                 return response($updateStudentCourse,200);
             }
             else{
-                return response("Invalid Course ID",1009);
+                return response("Invalid Course ID",209);
             }
     }  
 
@@ -132,7 +132,7 @@ class CourseController extends Controller
                         return response(1,200);
                     }
                     else
-                        return response("Course does not exist/Already added",1006);
+                        return response("Course does not exist/Already added",206);
                     
             }catch(\Exception $e)
             {
@@ -163,7 +163,7 @@ class CourseController extends Controller
                     return response(1,200);
                 }
                 else
-                    return response('Course already exists',1005);
+                    return response('Course already exists',205);
         }catch(\Exception $e)
         {
             return response($e,400);
@@ -198,7 +198,7 @@ class CourseController extends Controller
                     return response($updateCourse,200);
                 }
                 else{
-                    return response('Course already exists',1005);
+                    return response('Course already exists',205);
                 }
     }
     else{
@@ -250,7 +250,7 @@ class CourseController extends Controller
                 return response($updateCourse,200); 
             }
             else{
-                return response("Course not found/deleted",1007);
+                return response("Course not found/deleted",207);
             }
         }
         catch(\Exception $e)
@@ -280,7 +280,7 @@ class CourseController extends Controller
                 return response($deleteCourse,200); 
             }
             else{
-                return response("Course not found/deleted",1007);
+                return response("Course not found/deleted",207);
             }
         }
         catch(\Exception $e)
@@ -309,7 +309,7 @@ class CourseController extends Controller
                 return response($deleteCourse,200); 
             }
             else{
-                return response("Course not found/deleted",1007);
+                return response("Course not found/deleted",207);
             }
         }
         catch(\Exception $e)

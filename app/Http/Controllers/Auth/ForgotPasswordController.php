@@ -37,7 +37,7 @@ class ForgotPasswordController extends Controller
 
         //$data = '{"email":"amey@gmail.com"}'; 
 
-        $data = use Illuminate\Http\Request;
+        $data = json_encode($request->input());
         $decodeData = json_decode($data);
         $userObj = new User();
 

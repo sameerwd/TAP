@@ -92,7 +92,7 @@ class RegisterController extends Controller
             $checkUserExixts = $userObj->findUserByEmail($email);
 
             if($checkUserExixts > 0)
-                return response("User already exists",1012);
+                return response("User already exists",212);
         }
 
 
