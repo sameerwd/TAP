@@ -21,7 +21,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 class SettingsController extends Controller
 {
 
-    Course courseObj = new Course;
+    
     /*
     |--------------------------------------------------------------------------
     | Course Controller
@@ -41,11 +41,13 @@ class SettingsController extends Controller
 
     public function getTAPPosts()
     {
+        courseObj = new Course();
         return response('TAP Posts',200);
     }
 
     public function getTAPInstructorPosts()
     {
+        courseObj = new Course();
         return response('TAP Instructor Posts',200);
     }
 

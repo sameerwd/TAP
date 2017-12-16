@@ -43,12 +43,11 @@ class ForgotPasswordController extends Controller
 
         if(isset($decodeData->email) && $decodeData->email != "")
             $checkUser = $userObj->findUserByEmail($decodeData->email);
-        else
-
-            return ;
+        //else
+            //return response();
 
         if($checkUser == 0)
-            return ;
+            return response("No User Found",208);
     
         $password = rand(10,100);
         $email = $decodeData->email;
@@ -81,10 +80,10 @@ class ForgotPasswordController extends Controller
              $retval = mail ($email,$subject,$message,$header);
          
              if( $retval == true ) {
-                return ("Password sent successfully",200);
+                return response("Password sent successfully",200);
             }
             else{
-                return ("Bad Request. Please try again",400);
+                return response("Bad Request. Please try again",400);
             }
         }
     }
