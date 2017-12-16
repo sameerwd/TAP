@@ -88,7 +88,7 @@ class Course extends Model {
 		return DB::table('user_course')->where('userid',$user_id)->get();	
 	}
 
-	public function checkInstructorCourse($course)
+	public function checkInstructorCourse1($course)
 	{
 		return DB::table('user_course')->where('course',$course)->count();
 	}
