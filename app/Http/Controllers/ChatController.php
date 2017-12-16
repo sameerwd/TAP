@@ -193,10 +193,10 @@ class ChatController extends Controller
             }
             if($permission==1){
                 if($device=='ios'){
-                    sendSinglePushMessage($deviceToken,$message,'message',$threadid);
+                    //sendSinglePushMessage($deviceToken,$message,'message',$threadid);
                 }
                 else{
-                    sendSingleAndroidPushMessage($deviceToken,$message,'message',$threadid,$userid);
+                    //sendSingleAndroidPushMessage($deviceToken,$message,'message',$threadid,$userid);
                 }
             }
     }

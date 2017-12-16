@@ -156,7 +156,7 @@ class CourseController extends Controller
         $codes = array();
 
         try{
-                $checkCourse = $courseObj->checkInstructorCourse($courses);
+                $checkCourse = $courseObj->checkInstructorCourse1($courses);
                 if($checkCourse == 0)
                 {        
                     $createCourse = $courseObj->createCourse($course,$decodeData);
@@ -276,7 +276,7 @@ class CourseController extends Controller
         
          if($checkCourse > 0){
                 
-                $deleteCourse = deleteStudentCourse($ucid,$user_id,$course);       
+                $deleteCourse = $courseObj->deleteStudentCourse($ucid,$user_id,$course);       
                 return response($deleteCourse,200); 
             }
             else{

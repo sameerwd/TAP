@@ -60,7 +60,7 @@ class AssignmentController extends Controller
         $courseid = $decodeData->courseid;       
 
             try{
-                    $checkDuplicateAssignment = $assignmentObj->checkDuplicateAssignment($decodeData->title,$user_id);
+                    $checkDuplicateAssignment = $assignmentObj->checkDuplicateAssignment($decodeData->title,$userid);
 
                     if($checkDuplicateAssignment == 0)
                     {
