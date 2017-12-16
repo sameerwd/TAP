@@ -66,7 +66,7 @@ class AssignmentController extends Controller
                     {
                         $createAssignment = $assignmentObj->createAssignment($decodeData);
 
-                        $notify = $pushNotification->sendPostNotfication($userid,$courseid);    
+                        //$notify = $pushNotification->sendPostNotfication($userid,$courseid);    
                         return response($createAssignment,200);
                     }
                     else
