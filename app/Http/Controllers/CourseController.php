@@ -159,7 +159,7 @@ class CourseController extends Controller
                 $checkCourse = $courseObj->checkInstructorCourse1($courses);
                 if($checkCourse == 0)
                 {        
-                    $createCourse = $courseObj->createCourse($course,$decodeData);
+                    $createCourse = $courseObj->createCourse($courses,$decodeData);
                     return response(1,200);
                 }
                 else
