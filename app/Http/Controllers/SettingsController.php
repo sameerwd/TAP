@@ -41,13 +41,13 @@ class SettingsController extends Controller
 
     public function getTAPPosts()
     {
-        courseObj = new Course();
+        $courseObj = new Course();
         return response('TAP Posts',200);
     }
 
     public function getTAPInstructorPosts()
     {
-        courseObj = new Course();
+        $courseObj = new Course();
         return response('TAP Instructor Posts',200);
     }
 
