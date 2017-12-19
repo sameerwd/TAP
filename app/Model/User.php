@@ -114,7 +114,20 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     public function getEmailForPasswordReset() {
-        
+            
+    }
+
+
+    public function getUserForReset($email,$password){
+        $sql = "SELECT userid, title, userType, lastname, firstname, email, imageStatus, lastlogindttm FROM users where email ='".$email."' and forgotPassword ='".$password."' and status > 0";
+
+         return DB::select($sql);
+    }
+
+    public function updateResetPassword($userid,$password)
+    {
+        $sql = "update users set lastlogindttm = now(), password = '".$password."', forgotPassword = '' where userid = ".$userid;
+        return DB::select(DB::raw($sql));
     }
 
     public function sendPasswordResetNotification($token)

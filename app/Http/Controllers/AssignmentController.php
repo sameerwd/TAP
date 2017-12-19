@@ -235,86 +235,89 @@ class AssignmentController extends Controller
         $decodeData = json_decode($data);
         //$userid = Auth::user()->id;
         //$login_key = \Session::getId(); 
-        $duedate = $decodeData->duedate;
-        $title = $decodeData->title;
-        $courseid = $decodeData->courseid;
-        $assignmentid = $decodeData->assignmentid;
-        $detail = $decodeData->detail;
-        $userid = $decodeData->user_id;        
+        
+        $userid = $decodeData->userid;        
 
         try{
-            $updateAssignment = $assignmentObj->updateAssigment($title,$detail,$duedate,$courseid,$assignmentid);
-            return response($updateAssignment,200);
-        }
-        catch(\Exception $e)
-        {
-            return response("Bad Request. Please try again",400);
-        }
-
 
         $sql = "SELECT ucid FROM student_course where userid = ".$userid;
         $getUserCourses = DB::select($sql);
 
-    $arrUserCourse = array();
+        $arrUserCourse = array();
         if (count($getUserCourses) > 0)
         {
         
-            while($row = $result->fetch_array(MYSQLI_NUM))
+            foreach($getUserCourses as $userCourses)
             {
-                array_push($arrUserCourse,$row[0]);
+                array_push($arrUserCourse,$userCourses->ucid);
             }
             $arrUsers = array();
             
             $sql = "SELECT distinct users.userid, firstname, lastname, email, userType, title FROM user_course, users where users.userid!=".$userid." and users.userid= user_course.userid and ucid in (".implode(',',$arrUserCourse).") ORDER BY firstname";
-            $tempArray = array();
-            if ($result = mysqli_query($con, $sql))
+
+            $getUserInfo = DB::select($sql);
+
+            if (count($getUserInfo) > 0)
             {
-                while($row = $result->fetch_array(MYSQLI_ASSOC))
+                foreach($getUserInfo as $users)
                 {
-                    $tempArray = $row;
-                    array_push($arrUsers, $tempArray);
+                    array_push($arrUsers, $users);
                 }
             }
             $sql = "SELECT distinct users.userid, firstname, lastname, email, userType, title FROM student_course, users where users.userid!=".$userid." and users.userid= student_course.userid and ucid in (".implode(',',$arrUserCourse).") ORDER BY firstname";
-            $tempArray = array();
-            if ($result = mysqli_query($con, $sql))
+
+            $getStudentInfo = DB::select($sql);
+
+            
+            if(count($getStudentInfo) > 0)
             {
-                while($row = $result->fetch_array(MYSQLI_ASSOC))
+                foreach($getStudentInfo as $students)
                 {
-                    $tempArray = $row;
-                    array_push($arrUsers, $tempArray);
+                    array_push($arrUsers, $students);
                 }
             }
-            return response($arrUsers,200);
+            
+            return response()->json(['message' => 'Friends List', 'data' => $arrUsers, 'status' => 200]);
         }
         else{
-            $sql = "SELECT ucid FROM user_course where userid = ".$userid;
-            $arrUserCourse = array();
-            if ($result = mysqli_query($con, $sql)){
-                if($result->num_rows>0){
-                    while($row = $result->fetch_array(MYSQLI_NUM))
+            
+                $sql = "SELECT ucid FROM user_course where userid = ".$userid;
+                $getUserCourses = DB::select($sql);
+
+                $arrUserCourse = array();
+                if (count($getUserCourses) > 0)
+                {
+        
+                    foreach($getUserCourses as $userCourses)
                     {
-                        array_push($arrUserCourse,$row[0]);
+                        array_push($arrUserCourse,$userCourses->ucid);
                     }
+                
+                    $arrUsers = array();
             
                     $sql = "SELECT distinct users.userid, firstname, lastname, email, userType, title FROM student_course, users where users.userid!=".$userid." and users.userid= student_course.userid and ucid in (".implode(',',$arrUserCourse).") ORDER BY firstname";
-                    $arrUsers = array();
-                    $tempArray = array();
-                    if ($result = mysqli_query($con, $sql))
+
+                    $getUserInfo = DB::select($sql);
+
+                    if (count($getUserInfo) > 0)
                     {
-                        while($row = $result->fetch_array(MYSQLI_ASSOC))
+                        foreach($getUserInfo as $users)
                         {
-                            $tempArray = $row;
-                            array_push($arrUsers, $tempArray);
+                            array_push($arrUsers, $users);
                         }
                     }
                     return response($arrUsers,200);
                 }
                 else{
-                    return response("Course Not Found",207);
+                    return response()->json(['message' => 'Course not found', 'data' => null, 'status' => 207]);
                 }
             }
-            }
+        }
+        catch(\Exception $e)
+        {
+            return response()->json(['message' => 'Bad Request. Please try again', 'data' => null, 'status' => 400]);
+        }
     
     }
+
 }

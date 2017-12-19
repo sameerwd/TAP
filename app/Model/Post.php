@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Crypt;
 class Chats extends Model {
 
 
-	private function getPosts($userid)
+	public function getPosts($userid)
 	{	
 
 		$userType = 1;
@@ -42,5 +42,63 @@ class Chats extends Model {
 		return DB::select($sql);
 
 	}
+
+
+	public function insertSubmitPost($insertArray)
+	{
+		return DB::table('post')->insertGetId($insertArray);
+	}
+
+	public function sendPostNotfication($userid){
+		$sql = "select userid, title, firstname, lastname, userType from users where userid = ".$userid." and status = 1";
+
+		$getUser = DB::select($sql);
+
+			if(count($getUser) > 0){				
+				if($getUser[0]->userType == 2){//send notification to all students
+					$user = $getUser[0]->firstname." ".$getUser[0]->lastname;
+					$sql = "SELECT ucid FROM user_course where userid = ".$userid;
+					$getInstructorCourse = DB::select($sql);
+					$arrUserCourse = array();
+
+						if(count($getInstructorCourse) > 0){
+							foreach($getInstructorCourse as $courses)
+							{
+								array_push($arrUserCourse,$courses->ucid);
+							}
+							$arrUsers = array();
+							$tempArray = array();
+							
+						$sql = "SELECT distinct users.userid, firstname, lastname, userType, title, device, pushkey FROM student_course, users where users.userid!=".$userid." and users.userid= student_course.userid and ucid in (".implode(',',$arrUserCourse).") ORDER BY firstname";
+							
+							$getUserData = DB::select($sql);
+							$arrUsersIOS = array();
+							
+							if(count($getUserData) > 0)
+							{	
+								foreach($getUserData as $data)
+								{
+									$device = $data->device;
+									if($device=="ios"){
+										if($data->userid < 3){
+											$deviceToken = $data->pushkey;
+											array_push($arrUsersIOS,$deviceToken);
+											//$message = "New Post added on TAP from ".$user;
+											//include('push.php');
+										}
+									}
+								}
+							}
+							if(count($arrUsersIOS)>0){
+								$message = "New Post added on TAP from ".$user;
+								//sendPush($arrUsersIOS,$message);
+								return "true";
+							}
+						}
+				}
+			}
+	}
+
+
 
 }

@@ -26,6 +26,8 @@ Route::post('verifyEmailUser', 'UserController@validateUser');
 Route::post('forgotPassword', 'Auth\ForgotPasswordController@forgotPassword');
 Route::post('login', 'Auth\LoginController@login');
 Route::post('checkEmail','Auth\RegisterController@checkEmail');
+Route::post('resetPassword','Auth\ResetPasswordController@resetPassword');
+
 
 /* Assignment*/
 Route::post('listAssignments', 'AssignmentController@listAssignment');
