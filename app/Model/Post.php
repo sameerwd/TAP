@@ -46,7 +46,7 @@ class Chats extends Model {
 
 	public function insertSubmitPost($insertArray)
 	{
-		return DB::table('post')->insertGetId($insertArray);
+		return DB::table('posts')->insertGetId($insertArray);
 	}
 
 	public function sendPostNotfication($userid){

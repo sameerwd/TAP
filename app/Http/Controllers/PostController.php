@@ -63,7 +63,7 @@ class UserController extends Controller
         $type = $decodeData->type;
 		
 		// post =1 for text, =2 text and image
-		$insertArray = array('post' => $post, 'type' => $type, 'userid' => $userid);
+		$insertArray = array('post' => $post, 'type' => $type, 'userid' => $userid, 'status' => 1);
 		$getSubmitPost = $postObj->insertSubmitPost($insertArray);
 		
 		
