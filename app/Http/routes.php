@@ -59,6 +59,13 @@ Route::post('getUserThread', 'ChatController@getUserThreads');
 Route::post('listUserThreads', 'ChatController@getUserThreads');
 Route::post('saveMessage', 'ChatController@saveMessage');
 Route::post('updateNotificationPermission', 'PushNotificationController@activatePush');
+Route::post('submitPost', 'PostController@submitPost');
+
+/* User Related APIs */
+Route::post('getUserPosts', 'PostController@getPosts');
+Route::post('uploadProfilePic', 'UserController@uploadProfilePic');
+Route::post('updateProfile', 'UserController@updateProfile');
+
 
 
 /*System Related APIs*/

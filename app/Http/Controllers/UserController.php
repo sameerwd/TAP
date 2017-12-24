@@ -147,4 +147,64 @@ class UserController extends Controller
         }
     }
 
+    public function updateProfile(Request $request)
+    {
+        $userObj = new User();
+        $data = json_encode($request->input());
+        $decodeData = json_decode($data);
+
+        $first_name = $decodeData->first_name;
+        $last_name = $decodeData->last_name;
+        $userid = $decodeData->userid;
+        $password = $decodeData->password;
+
+        try{
+
+            if(isset($password) && $password != "")
+                $updateArray = array("firstname" => $first_name, "lastname" => $last_name, "password" => bcrypt($password));
+            else
+                $updateArray = array("firstname" => $first_name, "lastname" => $last_name);
+
+            $getUpdateProfile = $userObj->updateUserProfile($updateArray,$userid);
+
+            return response()->json(['message' => 'Profile Updated', 'status' => 200]); 
+        }
+        catch(\Exception $e)
+        {
+            return response($e,400);   
+        }
+
+    }
+
+    public function uploadProfilePic(Request $request)
+    {
+        $userObj = new User();
+        $data = json_encode($request->input());
+        $decodeData = json_decode($data);
+
+        $userid = $decodeData->userid;
+        $userFile = $decodeData->userFile;
+        $target_dir = "/profilePic/";
+        
+        $newfilename = public_path().$target_dir.$userid.'.jpg';
+
+        try{
+
+            if(file_put_contents($newfilename, base64_decode($userFile)))
+            {
+                $updateProfileStatus = $userObj->updateProfileImageStatus($userid);
+                return response()->json(['message' => 'Profile Picture Updated', 'status' => 200]);
+            }
+            else{
+                return response()->json(['message' => 'Error uploading picture, please try again', 'status' => 400]); 
+            }
+
+        }
+        catch(\Exception $e)
+        {
+            return response($e,400);
+        }
+        
+    }
+
 }

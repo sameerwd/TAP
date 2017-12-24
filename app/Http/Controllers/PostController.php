@@ -18,7 +18,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class PostController extends Controller
 {
 
 	//The index method
@@ -41,12 +41,15 @@ class UserController extends Controller
         $userid = $decodeData->userid;
 
         try{
-            $getPosts = $postObj->getPosts($userid);    
-            return response($getPosts,200);
+            $getPosts = $postObj->getPosts($userid);
+            if(count($getPosts) > 0)    
+            	return response()->json(['message' => 'Posts', 'data'=> $getPosts,'status' => 200]);
+            else
+            	return response()->json(['message' => 'No Posts Found', 'status' => 1012]);
         }
         catch(\Exception $e)
         {
-            return response("Bad Request. Please try again",400);
+            return response($e,400);
         }
 	}
 
@@ -60,31 +63,37 @@ class UserController extends Controller
 
         $userid = $decodeData->userid;
         $post = $decodeData->post;
-        $type = $decodeData->type;
+        $type = $decodeData->usertype;
+        $userFile = $decodeData->userFile;
 		
 		// post =1 for text, =2 text and image
 		$insertArray = array('post' => $post, 'type' => $type, 'userid' => $userid, 'status' => 1);
 		$getSubmitPost = $postObj->insertSubmitPost($insertArray);
 		
-		
-		//$userid = $_POST['userid'];
-		//$usertype = $_POST['usertype'];
-		//include(sendPostNotification.php);
-		$sendPost = $postObj->sendPostNotfication($userid);
+		try{	
 
-	if($type==2){
-		$target_dir = "pictures/";
-		
-		$newfilename = $target_dir.$postid . '.jpg';
+			$sendPost = $postObj->sendPostNotfication($userid);
 
-		if (move_uploaded_file($_FILES["userfile"]["tmp_name"], $newfilename)) {
-			return response()->json(['message' => 'File Uploaded', 'status' => 200]);
-		} else {
-			file_put_contents($newfilename, base64_decode($_POST['userfile']));
-			 return response()->json(['message' => 'Bad Request, Please try again', 'status' => 400]);
+			if($type==2){
+				$target_dir = "/pictures/";
+			
+			$newfilename = public_path().$target_dir.$post .'.jpg';
+
+			if (isset($_FILES["userfile"]["tmp_name"]) && move_uploaded_file($_FILES["userfile"]["tmp_name"], $newfilename)) {
+				return response()->json(['message' => 'Post Submitted', 'status' => 200]);
+			} else {
+				file_put_contents($newfilename, base64_decode($userFile));
+				 return response()->json(['message' => 'Post Submitted', 'status' => 200]);
+				}
 			}
+			else
+				return response()->json(['message' => 'Post Submitted', 'status' => 200]);	
+
+		}catch(\Exception $e){
+
+			return response($e,400);
 		}
+
 	}
-	
 	
 }

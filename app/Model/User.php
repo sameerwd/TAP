@@ -40,7 +40,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function updateUserPassword($password,$email)
     {
-        $updateArray = array('password' => $password);
+        $updateArray = array('password' => bcrypt($password));
         return DB::table('users')->where('email',$email)->update($updateArray);
     }
 
@@ -118,16 +118,26 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
 
-    public function getUserForReset($email,$password){
-        $sql = "SELECT userid, title, userType, lastname, firstname, email, imageStatus, lastlogindttm FROM users where email ='".$email."' and forgotPassword ='".$password."' and status > 0";
+    public function getUserForReset($email){
+        $sql = "SELECT userid, email FROM users where email ='".$email."' and status > 0";
 
          return DB::select($sql);
     }
 
     public function updateResetPassword($userid,$password)
     {
-        $sql = "update users set lastlogindttm = now(), password = '".$password."', forgotPassword = '' where userid = ".$userid;
+        $sql = "update users set lastlogindttm = now(), password = '".bcrypt($password)."', forgotPassword = '' where userid = ".$userid;
         return DB::select(DB::raw($sql));
+    }
+
+    public function updateProfileImageStatus($userid)
+    {
+        return DB::table('users')->where('userid',$userid)->update(['imageStatus' => 1]);
+    }
+
+    public function updateUserProfile($updateArray,$userid)
+    {
+        return DB::table('users')->where('userid',$userid)->update($updateArray);
     }
 
     public function sendPasswordResetNotification($token)

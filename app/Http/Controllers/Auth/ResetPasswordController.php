@@ -53,14 +53,14 @@ class ResetPasswordController extends Controller
         $password = $decodeData->oldPassword;
         $newPassword = $decodeData->newPassword;
 
-        $getUserDetails = $userObj->getUserForReset($email,$password);
-
-        if (count($getUserDetails) > 0)
+        $user = array('email' => $email,'password' => $password);
+        if(Auth::attempt($user))
         {
+            $getUserDetails = $userObj->getUserForReset($email);
+            
                 $userid = $getUserDetails[0]->userid;
-                $updateResetPassword = $userObj->updateResetPassword($userid,$password);
+                $updateResetPassword = $userObj->updateResetPassword($userid,$newPassword);
         
-                
                 return response()->json(['message' => 'Password Reset Successfully', 'data' => null, 'status' => 200]);
         }
         else{
