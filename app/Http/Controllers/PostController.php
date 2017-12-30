@@ -77,7 +77,7 @@ class PostController extends Controller
 			if($type==2){
 				$target_dir = "/pictures/";
 			
-			$newfilename = public_path().$target_dir.$post .'.jpg';
+			$newfilename = public_path().$target_dir.$getSubmitPost.'.jpg';
 
 			if (isset($_FILES["userfile"]["tmp_name"]) && move_uploaded_file($_FILES["userfile"]["tmp_name"], $newfilename)) {
 				return response()->json(['message' => 'Post Submitted', 'status' => 200]);
