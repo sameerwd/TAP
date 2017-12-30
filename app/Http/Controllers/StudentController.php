@@ -109,7 +109,7 @@ class StudentController extends Controller
 
         if(!$getStudents){
                   
-                    return response("No Student Found",208);
+                    return response($getStudents,200);
                 }
                 else{
 

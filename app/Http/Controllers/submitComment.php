@@ -19,4 +19,7 @@
 		"Status" => "OK",
 		"CommentID" => $commentid,
 	]);
+
+
+	getComment = page_no , postid
 ?>

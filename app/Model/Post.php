@@ -25,7 +25,7 @@ class Post extends Model {
 		        SELECT COUNT( * ) FROM comments WHERE postid = p.postid 
 		    ), 0 ) AS cnt, COALESCE(( 
 		        SELECT CONCAT( firstname, ' ', lastname ) FROM users u WHERE u.userid = p.userid and u.userType = ".$userType." 
-		   ), 'N/A' ) AS `name` FROM posts p JOIN comments c ON p.userid = $userid group by p.postid order by postid desc";
+		   ), 'N/A' ) AS `name` FROM posts p JOIN comments c ON p.userid = ".$userid." group by p.postid order by postid desc";
 		   
 		}
 		else{

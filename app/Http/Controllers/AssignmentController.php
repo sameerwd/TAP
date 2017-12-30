@@ -220,7 +220,7 @@ class AssignmentController extends Controller
         }
         catch(\Exception $e)
         {
-            return response("Bad Request. Please try again",400);
+            return response($e,400);
         }
         
     }
