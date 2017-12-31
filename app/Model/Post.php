@@ -98,6 +98,15 @@ class Post extends Model {
 			}
 	}
 
+	public function submitComment($userid,$postid,$comment)
+	{
+		$insertArray = array('userid' => $userid, 'postid' => $postid, 'comment' => $comment, 'status' => 1);
+		return DB::table('comments')->insertGetId($insertArray);
+	}
 
+	public function getComment($userid,$postid)
+	{
+		return DB::table('comments')->where('postid',$postid)->where('userid',$userid)->get();
+	}
 
 }

@@ -95,5 +95,53 @@ class PostController extends Controller
 		}
 
 	}
+
+	public function postComment(Request $request)
+	{
+
+		$data = json_encode($request->input());
+
+        $decodeData = json_decode($data);
+        $postObj = new Post();
+
+        $userid = $decodeData->userid;
+        $postid = $decodeData->postid;
+        $comment = $decodeData->comment;
+
+        try{
+        		$submitComment = $postObj->submitComment($userid,$postid,$comment);
+        		return response($submitComment,200);
+
+        }catch(\Exception $e)
+        {
+        	return response($e,400);
+        } 
+        	
+	}
+
+
+	public function getComment(Request $request)
+	{
+		$data = json_encode($request->input());
+
+        $decodeData = json_decode($data);
+        $postObj = new Post();
+
+        $userid = $decodeData->userid;
+        $postid = $decodeData->postid;
+
+        try{
+        		$getComment = $postObj->getComment($userid,$postid);
+
+        		if(!empty($getComment))
+        			return response($getComment,200);
+        		else
+        			return response()->json(['message' => 'No Comments', 'status' => 1014]);
+
+        }catch(\Exception $e)
+        {
+        	return response($e,400);
+        }
+	}
 	
 }
