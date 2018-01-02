@@ -63,7 +63,7 @@ class PostController extends Controller
 
         $userid = $decodeData->userid;
         $post = $decodeData->post;
-        $type = $decodeData->usertype;
+        $type = $decodeData->type;
         $userFile = $decodeData->userFile;
 		
 		// post =1 for text, =2 text and image

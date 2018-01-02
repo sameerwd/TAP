@@ -151,7 +151,7 @@ class SettingsController extends Controller
                     return response()->json(['message' => 'No Posts Found', 'status' => 1012]);
                 }
 
-                return response()->json(['message' => 'No User Found', 'status' => 1013]);
+                return response()->json(['message' => 'No Users Found', 'status' => 1013]);
 
             }
             else{
@@ -285,7 +285,7 @@ class SettingsController extends Controller
                     }
                 }
                 else{
-                        return response()->json(['message' => 'Instructor Posts', 'data' => $arrPosts, 'status' => 200]);
+                        return response()->json(['message' => 'No Users found for this course', 'status' => 1013]);
                 }
             }
             else
