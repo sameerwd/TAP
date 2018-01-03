@@ -106,7 +106,7 @@ class Post extends Model {
 
 	public function getComment($postid)
 	{
-		return DB::table('comments AS C')->join('users AS U','U.id','=','C.userid')->where('postid',$postid)->get();
+		return DB::table('comments AS C')->join('users AS U','U.userid','=','C.userid')->where('postid',$postid)->select('C.*','U.firstName','U.lastName')->get();
 	}
 
 }
