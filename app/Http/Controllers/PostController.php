@@ -127,11 +127,10 @@ class PostController extends Controller
         $decodeData = json_decode($data);
         $postObj = new Post();
 
-        $userid = $decodeData->userid;
         $postid = $decodeData->postid;
 
         try{
-        		$getComment = $postObj->getComment($userid,$postid);
+        		$getComment = $postObj->getComment($postid);
 
         		if(!empty($getComment))
         			return response($getComment,200);

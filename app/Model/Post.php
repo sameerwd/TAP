@@ -104,9 +104,9 @@ class Post extends Model {
 		return DB::table('comments')->insertGetId($insertArray);
 	}
 
-	public function getComment($userid,$postid)
+	public function getComment($postid)
 	{
-		return DB::table('comments')->where('postid',$postid)->where('userid',$userid)->get();
+		return DB::table('comments')->where('postid',$postid)->get();
 	}
 
 }
