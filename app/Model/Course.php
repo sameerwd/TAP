@@ -80,7 +80,7 @@ class Course extends Model {
 
 	public function getStudentCourse($user_id,$ucid)
 	{
-		return DB::table('student_course AS sc')->join('user_course AS uc','sc.ucid','=','uc.ucid')->join('users AS u','sc.userid','=','u.userid')->where('sc.userid',$user_id)->where('sc.ucid',$ucid)->get();
+		return DB::table('student_course AS sc')->join('user_course AS uc','sc.ucid','=','uc.ucid')->join('users AS u','sc.userid','=','u.userid')->where('sc.userid',$user_id)->get();
 	}
 
 	public function getInstructorCourse($user_id)
