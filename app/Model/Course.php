@@ -34,7 +34,7 @@ class Course extends Model {
 		return DB::select("SELECT ucid FROM student_course where ucid = ".$courses." AND userid =".$user_id."");
 	}
 
-	public function createStudentCourse($userid,$course)
+	public function createStudentCourse($course,$userid)
 	{
 		$insertArray = array('userid' => $userid, 'ucid' => $course);
 		return DB::table('student_course')->insertGetId($insertArray);
