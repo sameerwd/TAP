@@ -12,7 +12,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use DB;
 use Illuminate\Support\Facades\Session;
 
-class User extends Model{
+class SystemUpdates extends Model{
 
 
 
