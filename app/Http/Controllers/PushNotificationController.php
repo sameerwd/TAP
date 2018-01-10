@@ -19,6 +19,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
+use FCM;
 
 class PushNotificationController extends Controller
 {
@@ -112,6 +116,5 @@ class PushNotificationController extends Controller
         }
 
     }
-
 
 }    

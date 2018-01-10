@@ -90,5 +90,92 @@ class PushNotification extends Model {
 	{
 		$sql = "update users set pushkey = ".$pushkey." and os = ".$os." and ".$device." where userid =".$userid;
 		return DB::select(DB::raw($sql));
+	}
+
+	public function getDeviceKey($device)
+	{
+		return DB::table('users')->where('userid',$device)->pluck('pushkey');
 	}	
+
+
+	public function sendPush($users, $notification, $type, $permission)
+    {
+            $getDeviceKey = this->getDeviceKey($device);
+
+            $optionBuilder = new OptionsBuilder();
+            $optionBuilder->setTimeToLive(60*20);
+
+            $notificationBuilder = new PayloadNotificationBuilder('Assignment');
+            $notificationBuilder->setBody($notification)
+                                ->setSound('default');
+
+            $dataBuilder = new PayloadDataBuilder();
+            $dataBuilder->addData(['a_data' => 'my_data']);
+
+            $option = $optionBuilder->build();
+            $notification = $notificationBuilder->build();
+            $data = $dataBuilder->build();
+
+            $token = "";
+
+            $downstreamResponse = FCM::sendTo($getDeviceKey, $option, $notification, $data);
+
+            $downstreamResponse->numberSuccess();
+            $downstreamResponse->numberFailure();
+            $downstreamResponse->numberModification();
+
+            //return Array - you must remove all this tokens in your database
+            $downstreamResponse->tokensToDelete();
+
+            //return Array (key : oldToken, value : new token - you must change the token in your database )
+            $downstreamResponse->tokensToModify();
+
+            //return Array - you should try to resend the message to the tokens in the array
+            $downstreamResponse->tokensToRetry();       
+    }
+
+
+    public function sendMultiplePush($users, $notification, $type, $permission)
+    {
+    		$getDeviceKey = array();
+    		foreach($users as $user)
+    		{
+    			$getDeviceKey[] = this->getDeviceKey($user);	
+    		}
+    		
+
+            $optionBuilder = new OptionsBuilder();
+            $optionBuilder->setTimeToLive(60*20);
+
+            $notificationBuilder = new PayloadNotificationBuilder('Assignment');
+            $notificationBuilder->setBody($notification)
+                                ->setSound('default');
+
+            $dataBuilder = new PayloadDataBuilder();
+            $dataBuilder->addData(['a_data' => 'my_data']);
+
+            $option = $optionBuilder->build();
+            $notification = $notificationBuilder->build();
+            $data = $dataBuilder->build();
+
+            $token = "";
+
+    	$downstreamResponse = FCM::sendTo($getDeviceKey, $option, $notification, $data);
+
+		$downstreamResponse->numberSuccess();
+		$downstreamResponse->numberFailure();
+		$downstreamResponse->numberModification();
+
+		//return Array - you must remove all this tokens in your database
+		$downstreamResponse->tokensToDelete();
+
+		//return Array (key : oldToken, value : new token - you must change the token in your database )
+		$downstreamResponse->tokensToModify();
+
+		//return Array - you should try to resend the message to the tokens in the array
+		$downstreamResponse->tokensToRetry();
+
+		// return Array (key:token, value:errror) - in production you should remove from your database the tokens present in this array
+		$downstreamResponse->tokensWithError();
+    }
 }

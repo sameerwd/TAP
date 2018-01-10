@@ -62,6 +62,8 @@ Route::post('updateNotificationPermission', 'PushNotificationController@activate
 Route::post('submitPost', 'PostController@submitPost');
 Route::post('postComment', 'PostController@postComment');
 Route::post('getComment', 'PostController@getComment');
+Route::post('updateReadStatus', 'PostController@updateReadStatus');
+
 
 /* User Related APIs */
 Route::post('getUserPosts', 'PostController@getPosts');

@@ -142,5 +142,32 @@ class PostController extends Controller
         	return response($e,400);
         }
 	}
+
+	public function updateReadStatus(Request $request)
+	{
+		$data = json_encode($request->input());
+
+        $decodeData = json_decode($data);
+        $postObj = new Post();
+
+        $postid = $decodeData->msgids;
+        $readFlag = $decodeData->readFlag;
+
+        $updateReadStatus = array();
+
+        try{
+        		$postids = explode(",",$postid);
+
+        		foreach($postids as $postid)
+        		{
+        			$updateReadStatus = $postObj->updateReadStatus($postid,$readFlag);
+        		}
+        		return response($updateReadStatus,200);
+      
+        }catch(\Exception $e)
+        {
+        	return response($e,400);
+        }
+	}
 	
 }

@@ -109,4 +109,10 @@ class Post extends Model {
 		return DB::table('comments AS C')->join('users AS U','U.userid','=','C.userid')->where('postid',$postid)->select('C.*','U.firstName','U.lastName')->get();
 	}
 
+	public function updateReadStatus($postid,$readFlag)
+	{
+		$updateArray = array('readFlag' => $readFlag);
+		return DB::table('message')->where('msgid',$postid)->update($updateArray);
+	}
+
 }

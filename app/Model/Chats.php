@@ -53,10 +53,10 @@ class Chats extends Model{
 		public function getThreadMessage($threadid,$messageid)
 		{
 			if($messageid>0){
-        		$sql = "SELECT * FROM message where threadid =".$threadid." and msgid > ".$messageid." order by createdt asc";
+        		$sql = "SELECT *, (SELECT count(*) from message where readFlag = '0') as unread FROM message where threadid =".$threadid." and msgid > ".$messageid." group by msgid order by createdt asc";
     		}
     		else{
-        		$sql = "SELECT * FROM message where threadid =".$threadid." order by createdt asc";
+        		$sql = "SELECT *, (SELECT count(*) from message where readFlag = '0') as unread FROM message where threadid =".$threadid." group by msgid order by createdt asc";
     		}
 
     		return DB::select($sql);
