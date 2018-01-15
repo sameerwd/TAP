@@ -100,7 +100,7 @@ class PushNotification extends Model {
 
 	public function sendPush($users, $notification, $type, $permission)
     {
-            $getDeviceKey = this->getDeviceKey($device);
+            $getDeviceKey = $this->getDeviceKey($device);
 
             $optionBuilder = new OptionsBuilder();
             $optionBuilder->setTimeToLive(60*20);
@@ -140,7 +140,7 @@ class PushNotification extends Model {
     		$getDeviceKey = array();
     		foreach($users as $user)
     		{
-    			$getDeviceKey[] = this->getDeviceKey($user);	
+    			$getDeviceKey[] = $this->getDeviceKey($user);	
     		}
     		
 
