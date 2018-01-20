@@ -103,7 +103,7 @@ class RegisterController extends Controller
                 'lastname' => $decodeData->last_name,
                 'email' => $decodeData->email,
                 'password' => bcrypt($decodeData->password),
-                'userType' => 1,
+                'userType' => 2,
                 'os' => $decodeData->os,
                 'device' => $decodeData->device,
                 'pushkey' => $decodeData->pushkey,

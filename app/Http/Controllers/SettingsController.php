@@ -97,11 +97,11 @@ class SettingsController extends Controller
                         return response()->json(['message' => 'TAP Posts', 'data' => $arrPosts, 'status' => 200]);
                     }
 
-                    return response()->json(['message' => 'No User Found', 'status' => 1013]);
+                    return response()->json(['message' => 'No Posts Found', 'status' => 1012]);
                 } 
         }
         else{
-            return response()->json(['message' => 'No Courses Found', 'status' => 1007]);
+            return response()->json(['message' => 'No Posts Found', 'status' => 1012]);
         }
     }
     else{
@@ -151,7 +151,7 @@ class SettingsController extends Controller
                     return response()->json(['message' => 'No Posts Found', 'status' => 1012]);
                 }
 
-                return response()->json(['message' => 'No Users Found', 'status' => 1013]);
+                return response()->json(['message' => 'No Posts Found', 'status' => 1012]);
 
             }
             else{
@@ -285,11 +285,11 @@ class SettingsController extends Controller
                     }
                 }
                 else{
-                        return response()->json(['message' => 'No Users found for this course', 'status' => 1013]);
+                        return response()->json(['message' => 'No Posts Found', 'status' => 1012]);
                 }
             }
             else
-                return response()->json(['message' => 'No Courses Found', 'status' => 1007]);
+                return response()->json(['message' => 'No Posts Found', 'status' => 1012]);
     }
 }
 

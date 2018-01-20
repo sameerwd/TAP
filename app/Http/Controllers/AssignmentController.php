@@ -309,7 +309,7 @@ class AssignmentController extends Controller
                     return response($arrUsers,200);
                 }
                 else{
-                    return response()->json(['message' => 'Course not found', 'data' => null, 'status' => 207]);
+                    return response()->json(['message' => 'Friends not found', 'data' => null, 'status' => 207]);
                 }
             }
         }
