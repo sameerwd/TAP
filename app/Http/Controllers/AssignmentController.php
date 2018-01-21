@@ -285,6 +285,7 @@ class AssignmentController extends Controller
                 $getUserCourses = DB::select($sql);
 
                 $arrUserCourse = array();
+                $arrUsers = array();
                 if (count($getUserCourses) > 0)
                 {
         
@@ -293,7 +294,7 @@ class AssignmentController extends Controller
                         array_push($arrUserCourse,$userCourses->ucid);
                     }
                 
-                    $arrUsers = array();
+                    
             
                     $sql = "SELECT distinct users.userid, firstname, lastname, email, userType, title FROM student_course, users where users.userid!=".$userid." and users.userid= student_course.userid and ucid in (".implode(',',$arrUserCourse).") ORDER BY firstname";
 
