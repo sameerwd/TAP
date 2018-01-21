@@ -95,34 +95,17 @@ class RegisterController extends Controller
                 return response("User already exists",212);
         }
 
-
-        if($decodeData->user_type == 'admin')
-        {
-            $userCreate = User::create([
-                'firstname' => $decodeData->first_name,
-                'lastname' => $decodeData->last_name,
-                'email' => $decodeData->email,
-                'password' => bcrypt($decodeData->password),
-                'userType' => 2,
-                'os' => $decodeData->os,
-                'device' => $decodeData->device,
-                'pushkey' => $decodeData->pushkey,
-            ]);
-        }
-        else
-        {
             $userCreate = User::create([
                 'title' => $decodeData->title,
                 'firstname' => $decodeData->first_name,
                 'lastname' => $decodeData->last_name,
                 'email' => $decodeData->email,
                 'password' => bcrypt($decodeData->password),
-                'userType' => 1,
+                'userType' => $decodeData->user_type,
                 'os' => $decodeData->os,
                 'device' => $decodeData->device,
                 'pushkey' => $decodeData->pushkey,
             ]);
-        }
 
         if(isset($userCreate->id)){
             return response($userCreate->id,200);
