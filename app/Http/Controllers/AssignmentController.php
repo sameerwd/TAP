@@ -277,7 +277,7 @@ class AssignmentController extends Controller
                 }
             }
             
-            return response()->json(['message' => 'Friends List', 'data' => $arrUsers, 'status' => 200]);
+            return response($arrUsers,200);
         }
         else{
             
