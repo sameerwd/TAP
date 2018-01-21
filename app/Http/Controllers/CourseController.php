@@ -302,10 +302,9 @@ class CourseController extends Controller
 
         try{
             $checkCourse = $courseObj->checkInstructorCourse($course);
-        
-         if($checkCourse > 0){
+         if($checkCourse->count() > 0){
                 
-                $deleteCourse = deleteInstructorCourse($checkCourse);       
+                $deleteCourse = $courseObj->deleteInstructorCourse($checkCourse);       
                 return response($deleteCourse,200); 
             }
             else{
